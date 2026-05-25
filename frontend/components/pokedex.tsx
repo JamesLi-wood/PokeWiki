@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Card, Image, Text, Badge, Flex } from "@mantine/core";
+import { Card, Image, Text, Badge, Flex, Skeleton } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import capitalizeFirstLetter from "@/utils/capitalizeFirstLetter";
 import typeColors from "@/utils/typeColors";
@@ -41,15 +41,20 @@ type pkmnType = {
   };
 };
 
+const PAGE_SIZE = 50;
+
 const Pokedex = ({ limit, version }: { limit: number; version?: version }) => {
   const [national, setNational] = useState<natDex[]>([]);
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const [loading, setLoading] = useState(true);
   const isMobile = useMediaQuery("(max-width: 768px)");
 
   useEffect(() => {
     const cached = localStorage.getItem("natDex");
 
     if (cached) {
-      setNational(JSON.parse(cached));
+      setNational(JSON.parse(cached).slice(0, limit));
+      setLoading(false);
       return;
     }
 
@@ -86,8 +91,26 @@ const Pokedex = ({ limit, version }: { limit: number; version?: version }) => {
         );
 
         localStorage.setItem("natDex", JSON.stringify(dex));
-        setNational(dex);
+        setNational(dex.slice(0, limit));
+        setLoading(false);
       });
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const bottom =
+        window.innerHeight + window.scrollY >= document.body.offsetHeight - 500;
+
+      if (bottom) {
+        setVisibleCount((prev) => prev + PAGE_SIZE);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, []);
 
   const LoadTypes = ({ types }: { types: pkmnType[] }) => {
@@ -100,23 +123,36 @@ const Pokedex = ({ limit, version }: { limit: number; version?: version }) => {
 
   return (
     <div className="flex justify-center flex-wrap gap-3 mb-5">
-      {national.slice(0, limit).map((pokemon) => {
+      {(loading
+        ? Array(visibleCount).fill(null)
+        : national.slice(0, visibleCount)
+      ).map((pokemon, idx) => {
         return (
           <Card
-            key={pokemon.name}
+            key={idx}
             orientation={`${isMobile ? "horizontal" : "vertical"}`}
             w={`${isMobile ? "20rem" : "14rem"}`}
             withBorder
             shadow="sm"
           >
-            <Image
-              src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/${version}/${pokemon.entryNumber}.png`}
-              fallbackSrc={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${pokemon.entryNumber}.png`}
-              alt={pokemon.name}
-              h={`${isMobile ? "auto" : "6rem"}`}
+            <Skeleton
+              h="6rem"
               w={`${isMobile ? "6rem" : "auto"}`}
-              fit="contain"
-            />
+              visible={loading}
+            >
+              {!loading && (
+                <Image
+                  src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/${version}/${pokemon?.entryNumber}.png`}
+                  fallbackSrc={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${pokemon?.entryNumber}.png`}
+                  alt={pokemon?.name}
+                  className="mx-auto"
+                  h={`${isMobile ? "auto" : "6rem"}`}
+                  w={`${isMobile ? "6rem" : "auto"}`}
+                  fit="contain"
+                />
+              )}
+            </Skeleton>
+
             <Flex
               direction="column"
               justify="center"
@@ -129,31 +165,60 @@ const Pokedex = ({ limit, version }: { limit: number; version?: version }) => {
                 gap="0.5rem"
                 mb="0.5rem"
               >
-                <Badge variant="outline" size="lg" color="rgb(0, 0, 0)">
-                  {`#${pokemon.entryNumber}`}
-                </Badge>
-                <Text>{capitalizeFirstLetter(pokemon.name)}</Text>
+                <Skeleton
+                  h={`${loading ? "1.5rem" : "auto"}`}
+                  w={`${loading ? "3rem" : "auto"}`}
+                  visible={loading}
+                >
+                  {!loading && (
+                    <Badge variant="outline" size="lg" color="rgb(0, 0, 0)">
+                      {`#${pokemon.entryNumber}`}
+                    </Badge>
+                  )}
+                </Skeleton>
+                <Skeleton
+                  h={`${loading ? "1rem" : "auto"}`}
+                  w={`${loading ? "7rem" : "auto"}`}
+                  visible={loading}
+                >
+                  {!loading && (
+                    <Text>{capitalizeFirstLetter(pokemon.name)}</Text>
+                  )}
+                </Skeleton>
               </Flex>
 
-              <Flex direction="row" gap="0.5rem">
-                {(() => {
-                  switch (version) {
-                    case "generation-iii/ruby-sapphire":
-                    case "generation-iii/firered-leafgreen":
-                    case "generation-iii/emerald":
-                    case "generation-iv/diamond-pearl":
-                    case "generation-iv/platinum":
-                    case "generation-iv/heartgold-soulsilver":
-                    case "generation-v/black-white":
-                      if (pokemon.pastTypes.length > 0) {
-                        return <LoadTypes types={pokemon.pastTypes} />;
-                      } else {
-                        return <LoadTypes types={pokemon.currentTypes} />;
+              <Flex
+                direction="row"
+                gap="0.5rem"
+                w={`${loading ? "10rem" : "auto"}`}
+              >
+                {loading ? (
+                  <>
+                    <Skeleton height="1rem" w="50%" visible={true} />
+                    <Skeleton height="1rem" w="50%" visible={true} />{" "}
+                  </>
+                ) : (
+                  <>
+                    {(() => {
+                      switch (version) {
+                        case "generation-iii/ruby-sapphire":
+                        case "generation-iii/firered-leafgreen":
+                        case "generation-iii/emerald":
+                        case "generation-iv/diamond-pearl":
+                        case "generation-iv/platinum":
+                        case "generation-iv/heartgold-soulsilver":
+                        case "generation-v/black-white":
+                          if (pokemon.pastTypes.length > 0) {
+                            return <LoadTypes types={pokemon.pastTypes} />;
+                          } else {
+                            return <LoadTypes types={pokemon.currentTypes} />;
+                          }
+                        default:
+                          return <LoadTypes types={pokemon.currentTypes} />;
                       }
-                    default:
-                      return <LoadTypes types={pokemon.currentTypes} />;
-                  }
-                })()}
+                    })()}
+                  </>
+                )}
               </Flex>
             </Flex>
           </Card>
