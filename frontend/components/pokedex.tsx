@@ -4,20 +4,6 @@ import { useMediaQuery } from "@mantine/hooks";
 import capitalizeFirstLetter from "@/utils/capitalizeFirstLetter";
 import typeColors from "@/utils/typeColors";
 
-type version =
-  | "generation-iii/ruby-sapphire"
-  | "generation-iii/firered-leafgreen"
-  | "generation-iii/emerald"
-  | "generation-iv/diamond-pearl"
-  | "generation-iv/platinum"
-  | "generation-iv/heartgold-soulsilver"
-  | "generation-v/black-white"
-  | "generation-vi/x-y"
-  | "generation-vi/omegaruby-alphasapphire"
-  | "generation-vii/ultra-sun-ultra-moon"
-  | "generation-viii/brilliant-diamond-shining-pearl"
-  | "generation-ix/scarlet-violet";
-
 type pkmnData = {
   entry_number: number;
   pokemon_species: {
@@ -41,19 +27,74 @@ type pkmnType = {
   };
 };
 
+const version = {
+  rubySapphire: {
+    version: "generation-iii/ruby-sapphire",
+    limit: 386,
+  },
+  fireredLeafgreen: {
+    version: "generation-iii/firered-leafgreen",
+    limit: 386,
+  },
+  emerald: {
+    version: "generation-iii/emerald",
+    limit: 386,
+  },
+  diamondPearl: {
+    version: "generation-iv/diamond-pearl",
+    limit: 493,
+  },
+  platinum: {
+    version: "generation-iv/platinum",
+    limit: 493,
+  },
+  heartgoldSoulsilver: {
+    version: "generation-iv/heartgold-soulsilver",
+    limit: 493,
+  },
+  blackWhite: {
+    version: "generation-v/black-white",
+    limit: 649,
+  },
+  xy: {
+    version: "generation-vi/x-y",
+    limit: 721,
+  },
+  omegarubyAlphasapphire: {
+    version: "generation-vi/omegaruby-alphasapphire",
+    limit: 721,
+  },
+  ultrasunUltramoon: {
+    version: "generation-vii/ultra-sun-ultra-moon",
+    limit: 807,
+  },
+  swordShield: {
+    version: "generation-ix/scarlet-violet",
+    limit: 898,
+  },
+  brilliantdiamondShiningpearl: {
+    version: "generation-viii/brilliant-diamond-shining-pearl",
+    limit: 493,
+  },
+  scarletViolet: {
+    version: "generation-ix/scarlet-violet",
+    limit: 1025,
+  },
+};
 const PAGE_SIZE = 50;
 
-const Pokedex = ({ limit, version }: { limit: number; version?: version }) => {
+const Pokedex = ({ ver }: { ver: keyof typeof version }) => {
   const [national, setNational] = useState<natDex[]>([]);
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const [loading, setLoading] = useState(true);
   const isMobile = useMediaQuery("(max-width: 768px)");
+  const pokedex = version[ver];
 
   useEffect(() => {
     const cached = localStorage.getItem("natDex");
 
     if (cached) {
-      setNational(JSON.parse(cached).slice(0, limit));
+      setNational(JSON.parse(cached).slice(0, pokedex.limit));
       setLoading(false);
       return;
     }
@@ -91,7 +132,7 @@ const Pokedex = ({ limit, version }: { limit: number; version?: version }) => {
         );
 
         localStorage.setItem("natDex", JSON.stringify(dex));
-        setNational(dex.slice(0, limit));
+        setNational(dex.slice(0, pokedex.limit));
         setLoading(false);
       });
   }, []);
@@ -142,7 +183,7 @@ const Pokedex = ({ limit, version }: { limit: number; version?: version }) => {
             >
               {!loading && (
                 <Image
-                  src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/${version}/${pokemon?.entryNumber}.png`}
+                  src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/${pokedex.version}/${pokemon?.entryNumber}.png`}
                   fallbackSrc={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${pokemon?.entryNumber}.png`}
                   alt={pokemon?.name}
                   className="mx-auto"
@@ -200,7 +241,7 @@ const Pokedex = ({ limit, version }: { limit: number; version?: version }) => {
                 ) : (
                   <>
                     {(() => {
-                      switch (version) {
+                      switch (pokedex.version) {
                         case "generation-iii/ruby-sapphire":
                         case "generation-iii/firered-leafgreen":
                         case "generation-iii/emerald":
