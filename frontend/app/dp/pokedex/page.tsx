@@ -9,7 +9,7 @@ const Page = () => {
     <div>
       <div className={`${isMobile ? "w-full" : "w-[80%]"} mx-auto`}>
         <div className="text-center">Pokedex</div>
-        <Pokedex limit={493} version="generation-iv/diamond-pearl" />
+        <Pokedex ver="diamondPearl" />
       </div>
     </div>
   );
