@@ -263,6 +263,8 @@ const Pokedex = ({ version }: { version: keyof typeof gameVersion }) => {
           { label: "National", value: "national" },
         ]}
         size="md"
+        px="1rem"
+        py="0.5rem"
       />
       <div className="flex justify-center flex-wrap gap-3 my-5">
         {loading
@@ -283,7 +285,11 @@ const Pokedex = ({ version }: { version: keyof typeof gameVersion }) => {
                         <PokemonCard
                           key={entryNumber}
                           entryNumber={entryNumber}
-                          badgeNumber={idx + 1}
+                          badgeNumber={
+                            ["blackWhite", "black2White2"].includes(version)
+                              ? idx
+                              : idx + 1
+                          }
                         />
                       );
                     })}
