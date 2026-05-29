@@ -8,8 +8,7 @@ const Page = () => {
   return (
     <div>
       <div className={`${isMobile ? "w-full" : "w-[80%]"} mx-auto`}>
-        <div className="text-center">Pokedex</div>
-        <Pokedex ver="diamondPearl" />
+        <Pokedex version="diamondPearl" />
       </div>
     </div>
   );
