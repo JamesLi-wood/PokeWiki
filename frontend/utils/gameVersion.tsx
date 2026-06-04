@@ -40,7 +40,7 @@ const gameVersion = {
     limit: 649,
   },
   xy: {
-    version: "generation-vi/x-y",
+    version: "generation-vi/omegaruby-alphasapphire",
     regionalDex: [
       "https://pokeapi.co/api/v2/pokedex/12/",
       "https://pokeapi.co/api/v2/pokedex/13/",
