@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 import {
   Card,
   Image,
@@ -9,29 +11,11 @@ import {
   SegmentedControl,
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
+import { getRegionalPokedex } from "@/lib/getRegionalPokedex";
+import { getNationalPokedex } from "@/lib/getNationalPokedex";
 import capitalizeFirstLetter from "@/utils/capitalizeFirstLetter";
 import typeColors from "@/utils/typeColors";
 import gameVersion from "@/utils/gameVersion";
-
-type pkmnData = {
-  entry_number: number;
-  pokemon_species: {
-    name: string;
-    url: string;
-  };
-};
-
-type natDex = {
-  name: string;
-  entryNumber: number;
-  currentTypes: [];
-  pastTypes: [];
-};
-
-type regDex = {
-  title: string;
-  entryNumbers: number[];
-};
 
 type pkmnType = {
   slot: number;
@@ -47,77 +31,20 @@ const PAGE_SIZE = 50;
 
 const Pokedex = ({ version }: { version: keyof typeof gameVersion }) => {
   const pokedex = gameVersion[version];
-  const [natDex, setNatDex] = useState<natDex[]>([]);
-  const [regDex, setRegDex] = useState<regDex[]>([]);
   const [dexVersion, setDexVersion] = useState<dexVersion>("regional");
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
-  const [loading, setLoading] = useState(true);
   const isMobile = useMediaQuery("(max-width: 768px)");
-
-  useEffect(() => {
-    const loadRegional = async () => {
-      const regionalDex = await Promise.all(
-        pokedex.regionalDex.map(async (url) => {
-          const response = await fetch(url);
-          const data = await response.json();
-
-          const entryNumbers = data.pokemon_entries.map((pokemon: pkmnData) => {
-            return Number(pokemon.pokemon_species.url.match(/\d+/g)?.pop());
-          });
-
-          return {
-            title: data.name,
-            entryNumbers: entryNumbers,
-          };
-        }),
-      );
-      setRegDex(regionalDex);
-
-      const cached = localStorage.getItem("natDex");
-      if (cached) {
-        setNatDex(JSON.parse(cached).slice(0, pokedex.limit));
-        setLoading(false);
-        return;
-      }
-
-      const response = await fetch("https://pokeapi.co/api/v2/pokedex/1");
-      const data = await response.json();
-      const nationalDex = await Promise.all(
-        data.pokemon_entries.map(async (pokemon: pkmnData) => {
-          const response = await fetch(
-            `https://pokeapi.co/api/v2/pokemon/${pokemon.entry_number}`,
-          );
-
-          if (!response.ok) {
-            return {
-              name: "",
-              entryNumber: 0,
-              currentTypes: [],
-              pastTypes: [],
-            };
-          }
-
-          const extraPkmnData = await response.json();
-
-          return {
-            name: pokemon.pokemon_species.name,
-            entryNumber: pokemon.entry_number,
-            currentTypes: extraPkmnData.types,
-            pastTypes:
-              extraPkmnData.past_types.length > 0
-                ? extraPkmnData.past_types[0].types
-                : [],
-          };
-        }),
-      );
-
-      localStorage.setItem("natDex", JSON.stringify(nationalDex));
-      setNatDex(nationalDex.slice(0, pokedex.limit));
-      setLoading(false);
-    };
-
-    loadRegional();
-  }, []);
+  const router = useRouter();
+  const { data: natDex, isLoading: natDexLoading } = useQuery({
+    queryKey: ["nationalPokedex"],
+    queryFn: () => getNationalPokedex(pokedex.limit),
+    staleTime: Infinity,
+  });
+  const { data: regDex, isLoading: regDexLoading } = useQuery({
+    queryKey: ["regionalPokedex"],
+    queryFn: () => getRegionalPokedex(version, pokedex.regionalDex),
+    staleTime: Infinity,
+  });
 
   useEffect(() => {
     const handleScroll = () => {
@@ -152,18 +79,25 @@ const Pokedex = ({ version }: { version: keyof typeof gameVersion }) => {
   const PokemonCard = ({
     entryNumber,
     badgeNumber,
+    loading,
   }: {
     entryNumber: number;
     badgeNumber: number;
+    loading: boolean;
   }) => {
-    let pokemon = natDex[entryNumber - 1];
+    let pokemon = natDex?.[entryNumber - 1];
 
     return (
       <Card
+        className="cursor-pointer"
         orientation={`${isMobile ? "horizontal" : "vertical"}`}
         w={`${isMobile ? "20rem" : "14rem"}`}
         withBorder
         shadow="sm"
+        onClick={() => {
+          if (loading) return;
+          router.push(`/pokemon/${pokemon.entryNumber}`);
+        }}
       >
         <Skeleton
           h="6rem"
@@ -174,7 +108,7 @@ const Pokedex = ({ version }: { version: keyof typeof gameVersion }) => {
             <Image
               src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/${pokedex.version}/${pokemon?.entryNumber}.png`}
               fallbackSrc={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${pokemon?.entryNumber}.png`}
-              alt={pokemon?.name}
+              alt={pokemon.name}
               className="mx-auto"
               h={`${isMobile ? "auto" : "6rem"}`}
               w={`${isMobile ? "6rem" : "auto"}`}
@@ -267,41 +201,50 @@ const Pokedex = ({ version }: { version: keyof typeof gameVersion }) => {
         py="0.5rem"
       />
       <div className="flex justify-center flex-wrap gap-3 my-5">
-        {loading
+        {natDexLoading && regDexLoading
           ? Array(visibleCount)
               .fill(null)
               .map((_, idx) => {
                 return (
-                  <PokemonCard key={idx} entryNumber={idx} badgeNumber={idx} />
+                  <PokemonCard
+                    key={idx}
+                    entryNumber={idx}
+                    badgeNumber={idx}
+                    loading={true}
+                  />
                 );
               })
           : dexVersion == "regional"
-            ? regDex.map((dex) => (
+            ? regDex?.map((dex) => (
                 <div key={dex.title} className="text-center">
                   <div className="text-xl mb-5">{`${capitalizeFirstLetter(dex.title)} Pokedex`}</div>
                   <div className="flex justify-center flex-wrap gap-3 mb-5">
-                    {dex.entryNumbers.map((entryNumber, idx) => {
-                      return (
-                        <PokemonCard
-                          key={entryNumber}
-                          entryNumber={entryNumber}
-                          badgeNumber={
-                            ["blackWhite", "black2White2"].includes(version)
-                              ? idx
-                              : idx + 1
-                          }
-                        />
-                      );
-                    })}
+                    {dex.entryNumbers.map(
+                      (entryNumber: number, idx: number) => {
+                        return (
+                          <PokemonCard
+                            key={entryNumber}
+                            entryNumber={entryNumber}
+                            badgeNumber={
+                              ["blackWhite", "black2White2"].includes(version)
+                                ? idx
+                                : idx + 1
+                            }
+                            loading={false}
+                          />
+                        );
+                      },
+                    )}
                   </div>
                 </div>
               ))
-            : natDex.slice(0, visibleCount).map((pokemon) => {
+            : natDex?.slice(0, visibleCount).map((pokemon) => {
                 return (
                   <PokemonCard
                     key={pokemon.entryNumber}
                     entryNumber={pokemon.entryNumber}
                     badgeNumber={pokemon.entryNumber}
+                    loading={false}
                   />
                 );
               })}
