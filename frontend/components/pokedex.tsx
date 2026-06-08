@@ -201,7 +201,7 @@ const Pokedex = ({ version }: { version: keyof typeof gameVersion }) => {
         py="0.5rem"
       />
       <div className="flex justify-center flex-wrap gap-3 my-5">
-        {natDexLoading && regDexLoading
+        {natDexLoading || regDexLoading
           ? Array(visibleCount)
               .fill(null)
               .map((_, idx) => {
