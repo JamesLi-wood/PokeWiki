@@ -17,7 +17,7 @@ export default function usePokedex(ver: keyof typeof gameVersion) {
   });
 
   return {
-    natDex: natDex?.slice(0, version.limit),
+    natDex: natDex?.slice(0, version.limit + 1),
     regDex: regDex,
   };
 }
