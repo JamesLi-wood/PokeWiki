@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   Card,
@@ -11,11 +10,11 @@ import {
   SegmentedControl,
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
-import { getRegionalPokedex } from "@/lib/getRegionalPokedex";
-import { getNationalPokedex } from "@/lib/getNationalPokedex";
 import capitalizeFirstLetter from "@/utils/capitalizeFirstLetter";
 import typeColors from "@/utils/typeColors";
 import gameVersion from "@/utils/gameVersion";
+import usePokedex from "@/hooks/usePokedex";
+import useLoadPokemon from "@/hooks/useLoadPokemon";
 
 type pkmnType = {
   slot: number;
@@ -25,47 +24,36 @@ type pkmnType = {
   };
 };
 
-type dexVersion = "regional" | "national";
+type pkmnData = {
+  name: string;
+  entryNumber: number;
+  currentTypes: [];
+  pastTypes: [];
+};
 
-const PAGE_SIZE = 50;
+type dexVersion = "regional" | "national";
 
 const Pokedex = ({ version }: { version: keyof typeof gameVersion }) => {
   const pokedex = gameVersion[version];
   const [dexVersion, setDexVersion] = useState<dexVersion>("regional");
-  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const isMobile = useMediaQuery("(max-width: 768px)");
   const router = useRouter();
-  const { data: natDex, isLoading: natDexLoading } = useQuery({
-    queryKey: ["nationalPokedex"],
-    queryFn: () => getNationalPokedex(pokedex.limit),
-    staleTime: Infinity,
-  });
-  const { data: regDex, isLoading: regDexLoading } = useQuery({
-    queryKey: ["regionalPokedex"],
-    queryFn: () => getRegionalPokedex(version, pokedex.regionalDex),
-    staleTime: Infinity,
-  });
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const bottom =
-        window.innerHeight + window.scrollY >= document.body.offsetHeight - 500;
-
-      if (bottom) {
-        setVisibleCount((prev) => prev + PAGE_SIZE);
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
+  const { natDex, regDex } = usePokedex(version);
+  const {
+    pokemons: nationalMons,
+    isLoading: natLoading,
+    paginateUp,
+    paginateDown,
+  } = useLoadPokemon("national", natDex!);
+  const {
+    pokemons: regionalMons,
+    isLoading: regLoading,
+    paginateUp: regPaginateUp,
+    paginateDown: regPaginateDown,
+  } = useLoadPokemon(version, regDex!);
 
   const switchDex = () => {
     setDexVersion((prev) => (prev === "regional" ? "national" : "regional"));
-    setVisibleCount(PAGE_SIZE);
   };
 
   const LoadTypes = ({ types }: { types: pkmnType[] }) => {
@@ -77,16 +65,14 @@ const Pokedex = ({ version }: { version: keyof typeof gameVersion }) => {
   };
 
   const PokemonCard = ({
-    entryNumber,
+    pokemon,
     badgeNumber,
     loading,
   }: {
-    entryNumber: number;
+    pokemon: pkmnData | null;
     badgeNumber: number;
     loading: boolean;
   }) => {
-    let pokemon = natDex?.[entryNumber - 1];
-
     return (
       <Card
         className="cursor-pointer"
@@ -96,7 +82,7 @@ const Pokedex = ({ version }: { version: keyof typeof gameVersion }) => {
         shadow="sm"
         onClick={() => {
           if (loading) return;
-          router.push(`/pokemon/${pokemon.entryNumber}`);
+          router.push(`/pokemon/${pokemon?.entryNumber}`);
         }}
       >
         <Skeleton
@@ -106,9 +92,8 @@ const Pokedex = ({ version }: { version: keyof typeof gameVersion }) => {
         >
           {!loading && (
             <Image
-              src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/${pokedex.version}/${pokemon?.entryNumber}.png`}
-              fallbackSrc={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${pokemon?.entryNumber}.png`}
-              alt={pokemon.name}
+              src={`${pokedex.sprite}/${pokemon?.entryNumber}.png`}
+              alt={pokemon?.name}
               className="mx-auto"
               h={`${isMobile ? "auto" : "6rem"}`}
               w={`${isMobile ? "6rem" : "auto"}`}
@@ -145,7 +130,9 @@ const Pokedex = ({ version }: { version: keyof typeof gameVersion }) => {
               w={`${loading ? "7rem" : "auto"}`}
               visible={loading}
             >
-              {!loading && <Text>{capitalizeFirstLetter(pokemon.name)}</Text>}
+              {!loading && pokemon && (
+                <Text>{capitalizeFirstLetter(pokemon.name)}</Text>
+              )}
             </Skeleton>
           </Flex>
 
@@ -162,21 +149,24 @@ const Pokedex = ({ version }: { version: keyof typeof gameVersion }) => {
             ) : (
               <>
                 {(() => {
-                  switch (pokedex.version) {
-                    case "generation-iii/ruby-sapphire":
-                    case "generation-iii/firered-leafgreen":
-                    case "generation-iii/emerald":
-                    case "generation-iv/diamond-pearl":
-                    case "generation-iv/platinum":
-                    case "generation-iv/heartgold-soulsilver":
-                    case "generation-v/black-white":
-                      if (pokemon.pastTypes.length > 0) {
-                        return <LoadTypes types={pokemon.pastTypes} />;
-                      } else {
-                        return <LoadTypes types={pokemon.currentTypes} />;
-                      }
+                  switch (version) {
+                    case "rubySapphire":
+                    case "fireredLeafgreen":
+                    case "emerald":
+                    case "diamondPearl":
+                    case "platinum":
+                    case "heartgoldSoulsilver":
+                    case "blackWhite":
+                    case "black2White2":
+                      if (pokemon)
+                        return pokemon.pastTypes.length > 0 ? (
+                          <LoadTypes types={pokemon.pastTypes} />
+                        ) : (
+                          <LoadTypes types={pokemon.currentTypes} />
+                        );
                     default:
-                      return <LoadTypes types={pokemon.currentTypes} />;
+                      if (pokemon)
+                        return <LoadTypes types={pokemon.currentTypes} />;
                   }
                 })()}
               </>
@@ -201,53 +191,72 @@ const Pokedex = ({ version }: { version: keyof typeof gameVersion }) => {
         py="0.5rem"
       />
       <div className="flex justify-center flex-wrap gap-3 my-5">
-        {natDexLoading || regDexLoading
-          ? Array(visibleCount)
-              .fill(null)
-              .map((_, idx) => {
-                return (
-                  <PokemonCard
-                    key={idx}
-                    entryNumber={idx}
-                    badgeNumber={idx}
-                    loading={true}
-                  />
-                );
-              })
-          : dexVersion == "regional"
-            ? regDex?.map((dex) => (
-                <div key={dex.title} className="text-center">
-                  <div className="text-xl mb-5">{`${capitalizeFirstLetter(dex.title)} Pokedex`}</div>
-                  <div className="flex justify-center flex-wrap gap-3 mb-5">
-                    {dex.entryNumbers.map(
-                      (entryNumber: number, idx: number) => {
-                        return (
-                          <PokemonCard
-                            key={entryNumber}
-                            entryNumber={entryNumber}
-                            badgeNumber={
-                              ["blackWhite", "black2White2"].includes(version)
-                                ? idx
-                                : idx + 1
-                            }
-                            loading={false}
-                          />
-                        );
-                      },
-                    )}
-                  </div>
-                </div>
-              ))
-            : natDex?.slice(0, visibleCount).map((pokemon) => {
+        {regLoading || natLoading ? (
+          Array(50)
+            .fill(null)
+            .map((_, idx) => {
+              return (
+                <PokemonCard
+                  key={idx}
+                  pokemon={null}
+                  badgeNumber={idx}
+                  loading={true}
+                />
+              );
+            })
+        ) : dexVersion == "regional" ? (
+          <div>
+            <div className="flex justify-center flex-wrap gap-3 mb-5">
+              {regionalMons?.map((pokemon, idx: number) => {
+                if (typeof pokemon == "string") {
+                  return (
+                    <div key={idx} className="w-full text-center">
+                      {pokemon}
+                    </div>
+                  );
+                } else {
+                  return (
+                    <PokemonCard
+                      key={pokemon.entryNumber}
+                      pokemon={pokemon}
+                      badgeNumber={pokemon.entryNumber}
+                      loading={false}
+                    />
+                  );
+                }
+              })}
+            </div>
+            <div>
+              <button onClick={regPaginateDown}>PREV</button>
+              <button onClick={regPaginateUp}>NEXT</button>
+            </div>
+          </div>
+        ) : (
+          <div>
+            <div className="flex justify-center flex-wrap gap-3 mb-5">
+              {nationalMons?.map((pokemon) => {
+                if (typeof pokemon == "string")
+                  return (
+                    <div key={pokemon} className="w-full text-center">
+                      {pokemon}
+                    </div>
+                  );
                 return (
                   <PokemonCard
                     key={pokemon.entryNumber}
-                    entryNumber={pokemon.entryNumber}
+                    pokemon={pokemon}
                     badgeNumber={pokemon.entryNumber}
                     loading={false}
                   />
                 );
               })}
+            </div>
+            <div>
+              <button onClick={paginateDown}>PREV</button>
+              <button onClick={paginateUp}>NEXT</button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
