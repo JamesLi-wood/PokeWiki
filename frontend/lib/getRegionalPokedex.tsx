@@ -1,5 +1,3 @@
-import { db } from "./db";
-
 type pkmnData = {
   entry_number: number;
   pokemon_species: {
@@ -8,27 +6,26 @@ type pkmnData = {
   };
 };
 
-export async function getRegionalPokedex(name: string, pokedexes: string[]) {
-  const cached = await db.regionalPokedex.get(name);
-
-  if (cached) return cached.regionalDex;
-
+export const regionalPokedex = async (pokedexes: string[]) => {
   const regionalDex = await Promise.all(
     pokedexes.map(async (url) => {
       const res = await fetch(url);
       const data = await res.json();
 
-      const entryNumbers = data.pokemon_entries.map((pokemon: pkmnData) => {
-        return Number(pokemon.pokemon_species.url.match(/\d+/g)?.pop());
+      const pokemonEntries = data.pokemon_entries.map((pokemon: pkmnData) => {
+        const entryNumber = Number(
+          pokemon.pokemon_species.url.match(/\d+/g)?.pop(),
+        );
+
+        return {
+          name: pokemon.pokemon_species.name,
+          url: `https://pokeapi.co/api/v2/pokemon/${entryNumber}`,
+        };
       });
 
-      return {
-        title: data.name,
-        entryNumbers: entryNumbers,
-      };
+      return [{ title: `${data.name} Pokedex` }, ...pokemonEntries];
     }),
   );
 
-  await db.regionalPokedex.put({ name, regionalDex });
-  return regionalDex;
-}
+  return regionalDex.flat();
+};
