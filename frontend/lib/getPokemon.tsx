@@ -1,13 +1,32 @@
-import { db } from "./db";
+type dex =
+  | {
+      name: string;
+      url: string;
+    }
+  | {
+      title: string;
+    };
 
-export async function getPokemon(entryNumber: string) {
-  const cached = await db.pokemon.get(entryNumber);
+export const getPokemon = async (page: number, dex: dex[]) => {
+  const BATCH = 50;
+  const head = page * BATCH;
+  let tail = head + BATCH;
 
-  if (cached) return cached.data;
+  const nthPage = Promise.all(
+    dex.slice(head, tail).map(async (pokemon) => {
+      if ("title" in pokemon) return pokemon.title;
 
-  const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${entryNumber}/`);
-  const data = await res.json();
-  await db.pokemon.put({ entryNumber, data });
+      const res = await fetch(pokemon.url);
+      const data = await res.json();
 
-  return data;
-}
+      return {
+        name: data.species.name,
+        entryNumber: data.id,
+        currentTypes: data.types,
+        pastTypes: data.past_types.length > 0 ? data.past_types[0].types : [],
+      };
+    }),
+  );
+
+  return nthPage;
+};
