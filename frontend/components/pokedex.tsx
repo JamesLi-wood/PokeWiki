@@ -64,15 +64,7 @@ const Pokedex = ({ version }: { version: keyof typeof gameVersion }) => {
     ));
   };
 
-  const PokemonCard = ({
-    pokemon,
-    badgeNumber,
-    loading,
-  }: {
-    pokemon: pkmnData | null;
-    badgeNumber: number;
-    loading: boolean;
-  }) => {
+  const SkeletonPokemonCard = () => {
     return (
       <Card
         className="cursor-pointer"
@@ -80,28 +72,8 @@ const Pokedex = ({ version }: { version: keyof typeof gameVersion }) => {
         w={`${isMobile ? "20rem" : "14rem"}`}
         withBorder
         shadow="sm"
-        onClick={() => {
-          if (loading) return;
-          router.push(`/pokemon/${pokemon?.entryNumber}`);
-        }}
       >
-        <Skeleton
-          h="6rem"
-          w={`${isMobile ? "6rem" : "auto"}`}
-          visible={loading}
-        >
-          {!loading && (
-            <Image
-              src={`${pokedex.sprite}/${pokemon?.entryNumber}.png`}
-              alt={pokemon?.name}
-              className="mx-auto"
-              h={`${isMobile ? "auto" : "6rem"}`}
-              w={`${isMobile ? "6rem" : "auto"}`}
-              fit="contain"
-            />
-          )}
-        </Skeleton>
-
+        <Skeleton h="6rem" w={`${isMobile ? "6rem" : "auto"}`} visible={true} />
         <Flex
           direction="column"
           justify="center"
@@ -114,63 +86,87 @@ const Pokedex = ({ version }: { version: keyof typeof gameVersion }) => {
             gap="0.5rem"
             mb="0.5rem"
           >
-            <Skeleton
-              h={`${loading ? "1.5rem" : "auto"}`}
-              w={`${loading ? "3rem" : "auto"}`}
-              visible={loading}
-            >
-              {!loading && (
-                <Badge variant="outline" size="lg" color="rgb(0, 0, 0)">
-                  {`#${badgeNumber}`}
-                </Badge>
-              )}
-            </Skeleton>
-            <Skeleton
-              h={`${loading ? "1rem" : "auto"}`}
-              w={`${loading ? "7rem" : "auto"}`}
-              visible={loading}
-            >
-              {!loading && pokemon && (
-                <Text>{capitalizeFirstLetter(pokemon.name)}</Text>
-              )}
-            </Skeleton>
+            <Skeleton h={"1.5rem"} w={"3rem"} visible={true} />
+            <Skeleton h={"1rem"} w={"7rem"} visible={true}></Skeleton>
           </Flex>
 
+          <Flex direction="row" gap="0.5rem" w={"10rem"}>
+            <Skeleton height="1rem" w="50%" visible={true} />
+            <Skeleton height="1rem" w="50%" visible={true} />
+          </Flex>
+        </Flex>
+      </Card>
+    );
+  };
+
+  const PokemonCard = ({
+    pokemon,
+    badgeNumber,
+  }: {
+    pokemon: pkmnData | null;
+    badgeNumber: number;
+  }) => {
+    return (
+      <Card
+        className="cursor-pointer"
+        orientation={`${isMobile ? "horizontal" : "vertical"}`}
+        w={`${isMobile ? "20rem" : "14rem"}`}
+        withBorder
+        shadow="sm"
+        onClick={() => {
+          router.push(`/pokemon/${pokemon?.entryNumber}`);
+        }}
+      >
+        <Image
+          src={`${pokedex.sprite}/${pokemon?.entryNumber}.png`}
+          alt={pokemon?.name}
+          className="mx-auto"
+          h={`${isMobile ? "auto" : "6rem"}`}
+          w={`${isMobile ? "6rem" : "auto"}`}
+          fit="contain"
+        />
+        <Flex
+          direction="column"
+          justify="center"
+          align={`${isMobile ? "flex-start" : "center"}`}
+          className={`${isMobile ? "ml-4" : "mt-2"}`}
+        >
           <Flex
-            direction="row"
+            direction={`${isMobile ? "column" : "row"}`}
+            align={`${isMobile ? "flex-start" : "center"}`}
             gap="0.5rem"
-            w={`${loading ? "10rem" : "auto"}`}
+            mb="0.5rem"
           >
-            {loading ? (
-              <>
-                <Skeleton height="1rem" w="50%" visible={true} />
-                <Skeleton height="1rem" w="50%" visible={true} />{" "}
-              </>
-            ) : (
-              <>
-                {(() => {
-                  switch (version) {
-                    case "rubySapphire":
-                    case "fireredLeafgreen":
-                    case "emerald":
-                    case "diamondPearl":
-                    case "platinum":
-                    case "heartgoldSoulsilver":
-                    case "blackWhite":
-                    case "black2White2":
-                      if (pokemon)
-                        return pokemon.pastTypes.length > 0 ? (
-                          <LoadTypes types={pokemon.pastTypes} />
-                        ) : (
-                          <LoadTypes types={pokemon.currentTypes} />
-                        );
-                    default:
-                      if (pokemon)
-                        return <LoadTypes types={pokemon.currentTypes} />;
-                  }
-                })()}
-              </>
-            )}
+            <Badge variant="outline" size="lg" color="rgb(0, 0, 0)">
+              {`#${badgeNumber}`}
+            </Badge>
+
+            {pokemon && <Text>{capitalizeFirstLetter(pokemon.name)}</Text>}
+          </Flex>
+          <Flex direction="row" gap="0.5rem">
+            <>
+              {(() => {
+                switch (version) {
+                  case "rubySapphire":
+                  case "fireredLeafgreen":
+                  case "emerald":
+                  case "diamondPearl":
+                  case "platinum":
+                  case "heartgoldSoulsilver":
+                  case "blackWhite":
+                  case "black2White2":
+                    if (pokemon)
+                      return pokemon.pastTypes.length > 0 ? (
+                        <LoadTypes types={pokemon.pastTypes} />
+                      ) : (
+                        <LoadTypes types={pokemon.currentTypes} />
+                      );
+                  default:
+                    if (pokemon)
+                      return <LoadTypes types={pokemon.currentTypes} />;
+                }
+              })()}
+            </>
           </Flex>
         </Flex>
       </Card>
@@ -195,14 +191,7 @@ const Pokedex = ({ version }: { version: keyof typeof gameVersion }) => {
           Array(50)
             .fill(null)
             .map((_, idx) => {
-              return (
-                <PokemonCard
-                  key={idx}
-                  pokemon={null}
-                  badgeNumber={idx}
-                  loading={true}
-                />
-              );
+              return <SkeletonPokemonCard key={idx} />;
             })
         ) : dexVersion == "regional" ? (
           <div>
@@ -220,7 +209,6 @@ const Pokedex = ({ version }: { version: keyof typeof gameVersion }) => {
                       key={pokemon.entryNumber}
                       pokemon={pokemon}
                       badgeNumber={pokemon.entryNumber}
-                      loading={false}
                     />
                   );
                 }
@@ -246,7 +234,6 @@ const Pokedex = ({ version }: { version: keyof typeof gameVersion }) => {
                     key={pokemon.entryNumber}
                     pokemon={pokemon}
                     badgeNumber={pokemon.entryNumber}
-                    loading={false}
                   />
                 );
               })}
