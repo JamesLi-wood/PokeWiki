@@ -2,20 +2,19 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getPokemon } from "@/lib/getPokemon";
 
-type dex =
-  | {
-      name: string;
-      url: string;
-    }
-  | {
-      title: string;
-    };
+type pokemonEntries = {
+  name: string;
+  url: string;
+};
 
-export default function useLoadPokemon(ver: string, dex: dex[]) {
+export default function useLoadPokemon(
+  dexKey: string,
+  entries: pokemonEntries[],
+) {
   const [page, setPage] = useState(0);
   const { data: pokemons, isLoading } = useQuery({
-    queryKey: ["pokemon-page", ver, page],
-    queryFn: () => getPokemon(page, dex),
+    queryKey: ["pokemon-page", dexKey, page],
+    queryFn: () => getPokemon(page, entries),
     staleTime: Infinity,
   });
 
