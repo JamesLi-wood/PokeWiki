@@ -3,6 +3,10 @@ type entries = {
   url: string;
 };
 
+/* 
+  entries.name will not be used due to some species
+  having different forms ex: rotom-wash
+*/
 export const getPokemon = async (page: number, entries: entries[]) => {
   const BATCH = 50;
   const head = page * BATCH;
