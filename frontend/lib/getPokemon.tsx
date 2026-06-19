@@ -1,21 +1,15 @@
-type dex =
-  | {
-      name: string;
-      url: string;
-    }
-  | {
-      title: string;
-    };
+type entries = {
+  name: string;
+  url: string;
+};
 
-export const getPokemon = async (page: number, dex: dex[]) => {
+export const getPokemon = async (page: number, entries: entries[]) => {
   const BATCH = 50;
   const head = page * BATCH;
   let tail = head + BATCH;
 
   const nthPage = Promise.all(
-    dex.slice(head, tail).map(async (pokemon) => {
-      if ("title" in pokemon) return pokemon.title;
-
+    entries.slice(head, tail).map(async (pokemon) => {
       const res = await fetch(pokemon.url);
       const data = await res.json();
 
