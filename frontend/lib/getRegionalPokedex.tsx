@@ -23,9 +23,9 @@ export const regionalPokedex = async (pokedexes: string[]) => {
         };
       });
 
-      return [{ title: `${data.name} Pokedex` }, ...pokemonEntries];
+      return { title: `${data.name} Pokedex`, entries: pokemonEntries };
     }),
   );
 
-  return regionalDex.flat();
+  return regionalDex;
 };
