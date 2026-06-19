@@ -1,14 +1,57 @@
 "use client";
+import { useState } from "react";
+import usePokedex from "@/hooks/usePokedex";
 import Pokedex from "@/components/pokedex";
 import { useMediaQuery } from "@mantine/hooks";
+import { SegmentedControl } from "@mantine/core";
+
+type dexVersion = "regional" | "national";
 
 const Page = () => {
   const isMobile = useMediaQuery("(max-width: 768px)");
+  const { natDex, regDex } = usePokedex("black2White2");
+  const [dexVersion, setDexVersion] = useState<dexVersion>("regional");
+  const switchDex = () => {
+    setDexVersion((prev) => (prev === "regional" ? "national" : "regional"));
+  };
 
   return (
-    <div>
-      <div className={`${isMobile ? "w-full" : "w-[80%]"} mx-auto`}>
-        <Pokedex version="black2White2" />
+    <div className="flex flex-col items-center mt-5 gap-4">
+      <SegmentedControl
+        value={dexVersion}
+        onChange={switchDex}
+        data={[
+          { label: "Regional", value: "regional" },
+          { label: "National", value: "national" },
+        ]}
+        size="md"
+        px="1rem"
+        py="0.5rem"
+      />
+      <div className={`${isMobile ? "w-full" : "w-[80%]"} mx-auto text-center`}>
+        {dexVersion == "regional" ? (
+          <>
+            {regDex?.map((dex) => (
+              <div key={dex.title}>
+                <div>{dex.title}</div>
+                <Pokedex
+                  version="black2White2"
+                  dexKey={dex.title}
+                  entries={dex.entries}
+                />
+              </div>
+            ))}
+          </>
+        ) : (
+          <>
+            <div>{natDex.title}</div>
+            <Pokedex
+              version="black2White2"
+              dexKey={natDex.title}
+              entries={natDex.entries}
+            />
+          </>
+        )}
       </div>
     </div>
   );
