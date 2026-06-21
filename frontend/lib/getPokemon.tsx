@@ -7,10 +7,13 @@ type entries = {
   entries.name will not be used due to some species
   having different forms ex: rotom-wash
 */
-export const getPokemon = async (page: number, entries: entries[]) => {
-  const BATCH = 50;
-  const head = page * BATCH;
-  let tail = head + BATCH;
+export const getPokemon = async (
+  page: number,
+  entries: entries[],
+  batch: number,
+) => {
+  const head = page * batch;
+  let tail = head + batch;
 
   const nthPage = Promise.all(
     entries.slice(head, tail).map(async (pokemon) => {
