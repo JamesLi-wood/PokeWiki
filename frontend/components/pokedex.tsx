@@ -1,6 +1,14 @@
 import { useRouter } from "next/navigation";
 import useLoadPokemon from "@/hooks/useLoadPokemon";
-import { Card, Image, Text, Badge, Flex, Skeleton } from "@mantine/core";
+import {
+  Card,
+  Image,
+  Text,
+  Badge,
+  Flex,
+  Skeleton,
+  Pagination,
+} from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import capitalizeFirstLetter from "@/utils/capitalizeFirstLetter";
 import typeColors from "@/utils/typeColors";
@@ -38,10 +46,8 @@ const Pokedex = ({
   const pokedex = gameVersion[version];
   const isMobile = useMediaQuery("(max-width: 768px)");
   const router = useRouter();
-  const { pokemons, isLoading, paginateUp, paginateDown } = useLoadPokemon(
-    dexKey,
-    entries,
-  );
+  const { pokemons, isLoading, page, totalPages, paginate, BATCH } =
+    useLoadPokemon(dexKey, entries);
 
   const LoadTypes = ({ types }: { types: pkmnType[] }) => {
     return types.map((data) => (
@@ -114,7 +120,7 @@ const Pokedex = ({
         <Flex
           direction="column"
           justify="center"
-          align="center"
+          align={`${isMobile ? "flex-start" : "center"}`}
           className={`${isMobile ? "ml-4" : "mt-2"}`}
         >
           <Flex
@@ -167,22 +173,19 @@ const Pokedex = ({
             return <SkeletonPokemonCard key={idx} />;
           })
       ) : (
-        <div>
+        <div className="flex flex-col items-center">
           <div className="flex justify-center flex-wrap gap-3 mb-5">
-            {pokemons?.map((pokemon) => {
+            {pokemons?.map((pokemon, idx) => {
               return (
                 <PokemonCard
-                  key={pokemon.entryNumber}
+                  key={idx}
                   pokemon={pokemon}
-                  badgeNumber={pokemon.entryNumber}
+                  badgeNumber={BATCH * page + idx + 1}
                 />
               );
             })}
           </div>
-          <div>
-            <button onClick={paginateDown}>PREV</button>
-            <button onClick={paginateUp}>NEXT</button>
-          </div>
+          <Pagination total={totalPages} value={page + 1} onChange={paginate} />
         </div>
       )}
     </div>
