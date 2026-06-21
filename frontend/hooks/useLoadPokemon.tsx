@@ -14,18 +14,22 @@ export default function useLoadPokemon(
   const [page, setPage] = useState(0);
   const { data: pokemons, isLoading } = useQuery({
     queryKey: ["pokemon-page", dexKey, page],
-    queryFn: () => getPokemon(page, entries),
+    queryFn: () => getPokemon(page, entries, BATCH),
     staleTime: Infinity,
   });
+  const BATCH = 50;
+  const totalPages = Math.ceil(entries.length / BATCH);
 
-  const paginateUp = () => {
-    setPage((prev) => prev + 1);
+  const paginate = (num: number) => {
+    setPage(num - 1);
   };
 
-  const paginateDown = () => {
-    if (page == 0) return;
-    setPage((prev) => prev - 1);
+  return {
+    pokemons,
+    isLoading,
+    page,
+    totalPages,
+    paginate,
+    BATCH,
   };
-
-  return { pokemons, isLoading, paginateUp, paginateDown };
 }
