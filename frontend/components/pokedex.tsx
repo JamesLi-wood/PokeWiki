@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import useLoadPokemon from "@/hooks/useLoadPokemon";
 import {
@@ -8,11 +9,21 @@ import {
   Flex,
   Skeleton,
   Pagination,
+  Transition,
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import capitalizeFirstLetter from "@/utils/capitalizeFirstLetter";
 import typeColors from "@/utils/typeColors";
 import gameVersion from "@/utils/gameVersion";
+
+type PokedexProps = {
+  version: keyof typeof gameVersion;
+  dexKey: string;
+  entries: {
+    name: string;
+    url: string;
+  }[];
+};
 
 type pkmnType = {
   slot: number;
@@ -22,32 +33,31 @@ type pkmnType = {
   };
 };
 
-type pkmnData = {
-  name: string;
-  entryNumber: number;
-  currentTypes: [];
-  pastTypes: [];
+type PokemonCardProps = {
+  pokemon: {
+    name: string;
+    entryNumber: number;
+    currentTypes: [];
+    pastTypes: [];
+  };
+  badgeNumber: number;
+  style: React.CSSProperties;
 };
 
-type entries = {
-  name: string;
-  url: string;
-};
-
-const Pokedex = ({
-  version,
-  dexKey,
-  entries,
-}: {
-  version: keyof typeof gameVersion;
-  dexKey: string;
-  entries: entries[];
-}) => {
+const Pokedex = ({ version, dexKey, entries }: PokedexProps) => {
   const pokedex = gameVersion[version];
+  const [transition, setTransition] = useState(false);
   const isMobile = useMediaQuery("(max-width: 768px)");
   const router = useRouter();
   const { pokemons, isLoading, page, totalPages, paginate, BATCH } =
     useLoadPokemon(dexKey, entries);
+
+  useEffect(() => {
+    setTransition(false);
+    if (!isLoading) {
+      setTransition(true);
+    }
+  }, [isLoading]);
 
   const LoadTypes = ({ types }: { types: pkmnType[] }) => {
     return types.map((data) => (
@@ -79,11 +89,11 @@ const Pokedex = ({
             gap="0.5rem"
             mb="0.5rem"
           >
-            <Skeleton h={"1.5rem"} w={"3rem"} visible={true} />
-            <Skeleton h={"1rem"} w={"7rem"} visible={true}></Skeleton>
+            <Skeleton h="1.5rem" w="3rem" visible={true} />
+            <Skeleton h="1rem" w="7rem" visible={true}></Skeleton>
           </Flex>
 
-          <Flex direction="row" gap="0.5rem" w={"10rem"}>
+          <Flex direction="row" gap="0.5rem" w="10rem">
             <Skeleton height="1rem" w="50%" visible={true} />
             <Skeleton height="1rem" w="50%" visible={true} />
           </Flex>
@@ -92,15 +102,10 @@ const Pokedex = ({
     );
   };
 
-  const PokemonCard = ({
-    pokemon,
-    badgeNumber,
-  }: {
-    pokemon: pkmnData;
-    badgeNumber: number;
-  }) => {
+  const PokemonCard = ({ pokemon, badgeNumber, style }: PokemonCardProps) => {
     return (
       <Card
+        style={style}
         className="cursor-pointer"
         orientation={`${isMobile ? "horizontal" : "vertical"}`}
         w={`${isMobile ? "20rem" : "14rem"}`}
@@ -177,11 +182,21 @@ const Pokedex = ({
           <div className="flex justify-center flex-wrap gap-3 mb-5">
             {pokemons?.map((pokemon, idx) => {
               return (
-                <PokemonCard
+                <Transition
                   key={idx}
-                  pokemon={pokemon}
-                  badgeNumber={BATCH * page + idx + 1}
-                />
+                  mounted={transition}
+                  transition="fade"
+                  duration={1000}
+                  enterDelay={Math.min(idx * 15, 400)}
+                >
+                  {(styles) => (
+                    <PokemonCard
+                      style={styles}
+                      pokemon={pokemon}
+                      badgeNumber={BATCH * page + idx + 1}
+                    />
+                  )}
+                </Transition>
               );
             })}
           </div>
