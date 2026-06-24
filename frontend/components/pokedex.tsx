@@ -13,7 +13,6 @@ import {
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import capitalizeFirstLetter from "@/utils/capitalizeFirstLetter";
-import typeColors from "@/utils/typeColors";
 import gameVersion from "@/utils/gameVersion";
 
 type PokedexProps = {
@@ -63,7 +62,7 @@ const Pokedex = ({ version, dexKey, entries }: PokedexProps) => {
     return types.map((data) => (
       <Badge
         key={data.slot}
-        color={typeColors[data.type.name]}
+        style={{ backgroundColor: `var(--${data.type.name})` }}
         size={`${isMobile ? "xs" : "md"}`}
       >
         {data.type.name}
