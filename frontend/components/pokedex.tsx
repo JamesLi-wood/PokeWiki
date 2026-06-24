@@ -61,7 +61,11 @@ const Pokedex = ({ version, dexKey, entries }: PokedexProps) => {
 
   const LoadTypes = ({ types }: { types: pkmnType[] }) => {
     return types.map((data) => (
-      <Badge key={data.slot} color={typeColors[data.type.name]}>
+      <Badge
+        key={data.slot}
+        color={typeColors[data.type.name]}
+        size={`${isMobile ? "xs" : "md"}`}
+      >
         {data.type.name}
       </Badge>
     ));
@@ -71,31 +75,36 @@ const Pokedex = ({ version, dexKey, entries }: PokedexProps) => {
     return (
       <Card
         className="cursor-pointer"
-        orientation={`${isMobile ? "horizontal" : "vertical"}`}
-        w={`${isMobile ? "20rem" : "14rem"}`}
+        orientation="vertical"
+        w={`${isMobile ? "10rem" : "14rem"}`}
         withBorder
         shadow="sm"
       >
-        <Skeleton h="6rem" w={`${isMobile ? "6rem" : "auto"}`} visible={true} />
-        <Flex
-          direction="column"
-          justify="center"
-          align={`${isMobile ? "flex-start" : "center"}`}
-          className={`${isMobile ? "ml-4" : "mt-2"}`}
-        >
-          <Flex
-            direction={`${isMobile ? "column" : "row"}`}
-            align={`${isMobile ? "flex-start" : "center"}`}
-            gap="0.5rem"
-            mb="0.5rem"
-          >
-            <Skeleton h="1.5rem" w="3rem" visible={true} />
-            <Skeleton h="1rem" w="7rem" visible={true}></Skeleton>
+        <Skeleton h={`${isMobile ? "4rem" : "6rem"}`} visible={true} />
+        <Flex direction="column" align="center" className="mt-2">
+          <Flex direction="row" align="center" gap="0.5rem" mb="0.5rem">
+            <Skeleton
+              h={`${isMobile ? "1rem" : "1.5rem"}`}
+              w={`${isMobile ? "2rem" : "3rem"}`}
+              visible={true}
+            />
+            <Skeleton
+              h={`${isMobile ? "1rem" : "1.5rem"}`}
+              w={`${isMobile ? "4rem" : "7rem"}`}
+              visible={true}
+            />
           </Flex>
-
-          <Flex direction="row" gap="0.5rem" w="10rem">
-            <Skeleton height="1rem" w="50%" visible={true} />
-            <Skeleton height="1rem" w="50%" visible={true} />
+          <Flex direction="row" gap="0.5rem" w="100%">
+            <Skeleton
+              h={`${isMobile ? "1rem" : "1.5rem"}`}
+              w="50%"
+              visible={true}
+            />
+            <Skeleton
+              h={`${isMobile ? "1rem" : "1.5rem"}`}
+              w="50%"
+              visible={true}
+            />
           </Flex>
         </Flex>
       </Card>
@@ -107,8 +116,8 @@ const Pokedex = ({ version, dexKey, entries }: PokedexProps) => {
       <Card
         style={style}
         className="cursor-pointer"
-        orientation={`${isMobile ? "horizontal" : "vertical"}`}
-        w={`${isMobile ? "20rem" : "14rem"}`}
+        orientation="vertical"
+        w={`${isMobile ? "10rem" : "14rem"}`}
         withBorder
         shadow="sm"
         onClick={() => {
@@ -118,26 +127,23 @@ const Pokedex = ({ version, dexKey, entries }: PokedexProps) => {
         <Image
           src={`${pokedex.sprite}/${pokemon?.entryNumber}.png`}
           alt={pokemon?.name}
-          h={`${isMobile ? "auto" : "6rem"}`}
-          w={`${isMobile ? "6rem" : "auto"}`}
+          h={`${isMobile ? "4rem" : "6rem"}`}
           fit="contain"
         />
-        <Flex
-          direction="column"
-          justify="center"
-          align={`${isMobile ? "flex-start" : "center"}`}
-          className={`${isMobile ? "ml-4" : "mt-2"}`}
-        >
-          <Flex
-            direction={`${isMobile ? "column" : "row"}`}
-            align={`${isMobile ? "flex-start" : "center"}`}
-            gap="0.5rem"
-            mb="0.5rem"
-          >
-            <Badge variant="outline" size="lg" color="rgb(0, 0, 0)">
+        <Flex direction="column" align="center" className="mt-2">
+          <Flex direction="row" align="center" gap="0.5rem" mb="0.5rem">
+            <Badge
+              variant="outline"
+              size={`${isMobile ? "sm" : "lg"}`}
+              color="rgb(0, 0, 0)"
+            >
               {`#${badgeNumber}`}
             </Badge>
-            {pokemon && <Text>{capitalizeFirstLetter(pokemon.name)}</Text>}
+            {pokemon && (
+              <Text size={`${isMobile ? "xs" : "md"}`}>
+                {capitalizeFirstLetter(pokemon.name)}
+              </Text>
+            )}
           </Flex>
           <Flex direction="row" gap="0.5rem">
             <>
