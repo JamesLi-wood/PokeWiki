@@ -148,14 +148,14 @@ const Pokedex = ({ version, dexKey, entries }: PokedexProps) => {
             <>
               {(() => {
                 switch (version) {
-                  case "rubySapphire":
-                  case "fireredLeafgreen":
+                  case "rs":
+                  case "frlg":
                   case "emerald":
-                  case "diamondPearl":
+                  case "dp":
                   case "platinum":
-                  case "heartgoldSoulsilver":
-                  case "blackWhite":
-                  case "black2White2":
+                  case "hgss":
+                  case "bw":
+                  case "bw2":
                     if (pokemon)
                       return pokemon.pastTypes.length > 0 ? (
                         <LoadTypes types={pokemon.pastTypes} />
