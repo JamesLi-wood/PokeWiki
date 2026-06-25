@@ -1,12 +1,12 @@
 const gameVersion = {
-  rubySapphire: {
+  rs: {
     version: "generation-iii/ruby-sapphire",
     regionalDex: ["https://pokeapi.co/api/v2/pokedex/4/"],
     sprite:
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/ruby-sapphire",
     limit: 386,
   },
-  fireredLeafgreen: {
+  frlg: {
     version: "generation-iii/firered-leafgreen",
     regionalDex: ["https://pokeapi.co/api/v2/pokedex/2/"],
     sprite:
@@ -20,7 +20,7 @@ const gameVersion = {
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/emerald",
     limit: 386,
   },
-  diamondPearl: {
+  dp: {
     version: "generation-iv/diamond-pearl",
     regionalDex: ["https://pokeapi.co/api/v2/pokedex/5/"],
     sprite:
@@ -34,21 +34,21 @@ const gameVersion = {
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iv/platinum/",
     limit: 493,
   },
-  heartgoldSoulsilver: {
+  hgss: {
     version: "generation-iv/heartgold-soulsilver",
     regionalDex: ["https://pokeapi.co/api/v2/pokedex/7/"],
     sprite:
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iv/heartgold-soulsilver",
     limit: 493,
   },
-  blackWhite: {
+  bw: {
     version: "generation-v/black-white",
     regionalDex: ["https://pokeapi.co/api/v2/pokedex/8/"],
     sprite:
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white",
     limit: 649,
   },
-  black2White2: {
+  bw2: {
     version: "generation-v/black-white",
     regionalDex: ["https://pokeapi.co/api/v2/pokedex/9/"],
     sprite:
@@ -66,14 +66,14 @@ const gameVersion = {
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-vi/omegaruby-alphasapphire",
     limit: 721,
   },
-  omegarubyAlphasapphire: {
+  oras: {
     version: "generation-vi/omegaruby-alphasapphire",
     regionalDex: ["https://pokeapi.co/api/v2/pokedex/15/"],
     sprite:
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-vi/omegaruby-alphasapphire",
     limit: 721,
   },
-  sunMoon: {
+  sm: {
     version: "generation-vii/ultra-sun-ultra-moon",
     regionalDex: [
       "https://pokeapi.co/api/v2/pokedex/17/",
@@ -85,7 +85,7 @@ const gameVersion = {
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-vii/ultra-sun-ultra-moon",
     limit: 807,
   },
-  ultrasunUltramoon: {
+  usum: {
     version: "generation-vii/ultra-sun-ultra-moon",
     regionalDex: [
       "https://pokeapi.co/api/v2/pokedex/22/",
@@ -97,7 +97,7 @@ const gameVersion = {
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-vii/ultra-sun-ultra-moon",
     limit: 807,
   },
-  swordShield: {
+  swsh: {
     version: "generation-ix/scarlet-violet",
     regionalDex: [
       "https://pokeapi.co/api/v2/pokedex/27/",
@@ -108,14 +108,14 @@ const gameVersion = {
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-viii/icons",
     limit: 898,
   },
-  brilliantdiamondShiningpearl: {
+  bdsp: {
     version: "generation-viii/brilliant-diamond-shining-pearl",
     regionalDex: ["https://pokeapi.co/api/v2/pokedex/5/"],
     sprite:
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-viii/brilliant-diamond-shining-pearl",
     limit: 493,
   },
-  scarletViolet: {
+  sv: {
     version: "generation-ix/scarlet-violet",
     regionalDex: [
       "https://pokeapi.co/api/v2/pokedex/31/",
