@@ -22,6 +22,7 @@ type PokedexProps = {
     name: string;
     url: string;
   }[];
+  victiniClause: boolean;
 };
 
 type pkmnType = {
@@ -43,13 +44,14 @@ type PokemonCardProps = {
   style: React.CSSProperties;
 };
 
-const Pokedex = ({ version, dexKey, entries }: PokedexProps) => {
+const Pokedex = ({ version, dexKey, entries, victiniClause }: PokedexProps) => {
   const pokedex = gameVersion[version];
   const [transition, setTransition] = useState(false);
   const isMobile = useMediaQuery("(max-width: 768px)");
   const router = useRouter();
   const { pokemons, isLoading, page, totalPages, paginate, BATCH } =
     useLoadPokemon(dexKey, entries);
+  const victiniIdx = victiniClause ? -1 : 0;
 
   useEffect(() => {
     setTransition(false);
@@ -198,7 +200,7 @@ const Pokedex = ({ version, dexKey, entries }: PokedexProps) => {
                     <PokemonCard
                       style={styles}
                       pokemon={pokemon}
-                      badgeNumber={BATCH * page + idx + 1}
+                      badgeNumber={BATCH * page + idx + 1 + victiniIdx}
                     />
                   )}
                 </Transition>

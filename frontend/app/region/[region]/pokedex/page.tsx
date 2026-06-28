@@ -16,6 +16,7 @@ const Page = () => {
   if (!(slug in gameVersion)) return <div>Game version not found</div>;
 
   const version = slug as keyof typeof gameVersion;
+  const victiniClause = ["bw", "bw2"].includes(slug);
   const isMobile = useMediaQuery("(max-width: 768px)");
   const { natDex, regDex } = usePokedex(version);
   const [dexVersion, setDexVersion] = useState<dexVersion>("regional");
@@ -46,6 +47,7 @@ const Page = () => {
                   version={version}
                   dexKey={dex.title}
                   entries={dex.entries}
+                  victiniClause={victiniClause}
                 />
               </div>
             ))}
@@ -57,6 +59,7 @@ const Page = () => {
               version={version}
               dexKey={natDex.title}
               entries={natDex.entries}
+              victiniClause={false}
             />
           </>
         )}
