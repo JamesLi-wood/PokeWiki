@@ -77,7 +77,7 @@ const Pokedex = ({ version, dexKey, entries, victiniClause }: PokedexProps) => {
       <Card
         className="cursor-pointer"
         orientation="vertical"
-        w={`${isMobile ? "10rem" : "14rem"}`}
+        w={`${isMobile ? "10rem" : "13rem"}`}
         withBorder
         shadow="sm"
       >
@@ -118,7 +118,7 @@ const Pokedex = ({ version, dexKey, entries, victiniClause }: PokedexProps) => {
         style={style}
         className="cursor-pointer"
         orientation="vertical"
-        w={`${isMobile ? "10rem" : "14rem"}`}
+        w={`${isMobile ? "10rem" : "13rem"}`}
         withBorder
         shadow="sm"
         onClick={() => {
@@ -177,7 +177,7 @@ const Pokedex = ({ version, dexKey, entries, victiniClause }: PokedexProps) => {
   };
 
   return (
-    <div className="flex justify-center flex-wrap gap-3 my-5">
+    <div className="flex justify-center flex-wrap gap-3 m-5">
       {isLoading ? (
         Array(50)
           .fill(null)
