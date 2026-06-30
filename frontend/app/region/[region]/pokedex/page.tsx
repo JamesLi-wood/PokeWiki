@@ -1,8 +1,8 @@
 "use client";
 import { useState } from "react";
-import { useParams } from "next/navigation";
-import { useMediaQuery } from "@mantine/hooks";
-import { SegmentedControl } from "@mantine/core";
+import { useParams, useRouter } from "next/navigation";
+import { useMediaQuery, useDisclosure } from "@mantine/hooks";
+import { Drawer, SegmentedControl, Button } from "@mantine/core";
 import Pokedex from "@/components/pokedex";
 import usePokedex from "@/hooks/usePokedex";
 import gameVersion from "@/utils/gameVersion";
@@ -16,16 +16,41 @@ const Page = () => {
   if (!(slug in gameVersion)) return <div>Game version not found</div>;
 
   const version = slug as keyof typeof gameVersion;
+  const gameTitles = Object.entries(gameVersion).map(([key, game]) => ({
+    key,
+    title: game.title,
+  }));
   const victiniClause = ["bw", "bw2"].includes(slug);
-  const isMobile = useMediaQuery("(max-width: 768px)");
   const { natDex, regDex } = usePokedex(version);
+  const [opened, { open, close }] = useDisclosure(false);
   const [dexVersion, setDexVersion] = useState<dexVersion>("regional");
+  const isMobile = useMediaQuery("(max-width: 768px)");
+  const router = useRouter();
+
   const switchDex = () => {
     setDexVersion((prev) => (prev === "regional" ? "national" : "regional"));
   };
 
   return (
     <div className="flex flex-col items-center mt-5 gap-4">
+      <div>
+        <Drawer opened={opened} onClose={close} title="Other Games">
+          {gameTitles.map((game) => (
+            <div
+              key={game.key}
+              className={`${slug == game.key && "bg-gray-500"} p-2 cursor-pointer`}
+              onClick={() => {
+                router.push(`/region/${game.key}/pokedex`);
+              }}
+            >
+              {game.title}
+            </div>
+          ))}
+        </Drawer>
+        <Button variant="default" onClick={open}>
+          View Other Games
+        </Button>
+      </div>
       <SegmentedControl
         value={dexVersion}
         onChange={switchDex}
@@ -42,7 +67,7 @@ const Page = () => {
           <>
             {regDex?.map((dex) => (
               <div key={dex.title}>
-                <div>{dex.title}</div>
+                <div className="font-bold">{dex.title}</div>
                 <Pokedex
                   version={version}
                   dexKey={dex.title}
@@ -54,7 +79,7 @@ const Page = () => {
           </>
         ) : (
           <>
-            <div>{natDex.title}</div>
+            <div className="font-bold">{natDex.title}</div>
             <Pokedex
               version={version}
               dexKey={natDex.title}
