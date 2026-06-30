@@ -11,7 +11,7 @@ import {
   Pagination,
   Transition,
 } from "@mantine/core";
-import { useMediaQuery } from "@mantine/hooks";
+import { useMediaQuery, useScrollIntoView } from "@mantine/hooks";
 import capitalizeFirstLetter from "@/utils/capitalizeFirstLetter";
 import gameVersion from "@/utils/gameVersion";
 
@@ -46,11 +46,15 @@ type PokemonCardProps = {
 
 const Pokedex = ({ version, dexKey, entries, victiniClause }: PokedexProps) => {
   const pokedex = gameVersion[version];
-  const [transition, setTransition] = useState(false);
-  const isMobile = useMediaQuery("(max-width: 768px)");
-  const router = useRouter();
   const { pokemons, isLoading, page, totalPages, paginate, BATCH } =
     useLoadPokemon(dexKey, entries);
+  const { scrollIntoView, targetRef } = useScrollIntoView<HTMLDivElement>({
+    offset: 200,
+    duration: 0,
+  });
+  const router = useRouter();
+  const isMobile = useMediaQuery("(max-width: 768px)");
+  const [transition, setTransition] = useState(false);
   const victiniIdx = victiniClause ? -1 : 0;
 
   useEffect(() => {
@@ -177,7 +181,7 @@ const Pokedex = ({ version, dexKey, entries, victiniClause }: PokedexProps) => {
   };
 
   return (
-    <div className="flex justify-center flex-wrap gap-3 m-5">
+    <div ref={targetRef} className="flex justify-center flex-wrap gap-3 m-5">
       {isLoading ? (
         Array(50)
           .fill(null)
@@ -207,7 +211,16 @@ const Pokedex = ({ version, dexKey, entries, victiniClause }: PokedexProps) => {
               );
             })}
           </div>
-          <Pagination total={totalPages} value={page + 1} onChange={paginate} />
+          <Pagination
+            total={totalPages}
+            value={page + 1}
+            onChange={(val) => {
+              paginate(val);
+              scrollIntoView({
+                alignment: "start",
+              });
+            }}
+          />
         </div>
       )}
     </div>
