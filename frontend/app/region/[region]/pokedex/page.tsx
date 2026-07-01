@@ -38,7 +38,7 @@ const Page = () => {
           {gameTitles.map((game) => (
             <div
               key={game.key}
-              className={`${slug == game.key && "bg-gray-500"} p-2 cursor-pointer`}
+              className={`${slug == game.key && "bg-(--secondary)"} hover:bg-(--secondary) p-2 my-2 cursor-pointer`}
               onClick={() => {
                 router.push(`/region/${game.key}/pokedex`);
               }}
@@ -47,11 +47,19 @@ const Page = () => {
             </div>
           ))}
         </Drawer>
-        <Button variant="default" onClick={open}>
+        <Button
+          variant="default"
+          bg="var(--secondary)"
+          c="white"
+          bd="none"
+          onClick={open}
+        >
           View Other Games
         </Button>
       </div>
       <SegmentedControl
+        bg="var(--secondary)"
+        color="var(--info)"
         value={dexVersion}
         onChange={switchDex}
         data={[

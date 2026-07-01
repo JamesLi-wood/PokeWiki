@@ -7,9 +7,65 @@ body,
   margin: 0;
   padding: 0;
   font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--primary);
+  color: white;
+}
+
+/* Mantine Skeleton Component */
+.custom-skeleton::before {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--secondary),
+    transparent
+  );
+}
+.custom-skeleton::after {
+  background-color: var(--primary);
+}
+
+/* Mantine SegmentedControl Component */
+.mantine-SegmentedControl-control[data-active] .mantine-SegmentedControl-label,
+.mantine-SegmentedControl-control:hover .mantine-SegmentedControl-label {
+  color: white; /* selected text and hovering unselected text */
+}
+.mantine-SegmentedControl-label {
+  color: #bbbbbb; /* unselected text */
+}
+
+/* Mantine Pagination Component */
+.mantine-Pagination-control {
+  color: white; /* default */
+  background-color: transparent;
+}
+.mantine-Pagination-control:hover {
+  background-color: rgba(255, 255, 255, 0.06); /* hover unselected page */
+}
+.mantine-Pagination-control[data-active] {
+  color: white; /* selected page */
+  background-color: var(--info);
+}
+
+/* Mantine Drawer Component */
+.mantine-Drawer-header,
+.mantine-Drawer-content {
+  background-color: var(--primary);
+}
+.mantine-Drawer-close {
+  color: white;
+  background-color: transparent;
+}
+.mantine-Drawer-close:hover {
+  background-color: var(--info);
 }
 
 :root {
+  /* Main Colors */
+  --primary: #121212;
+  --secondary: #27272a;
+  --info: #228be6;
+
+  /* Pokemon Type Colors */
   --normal: rgb(168, 168, 120);
   --fire: rgb(240, 128, 48);
   --water: rgb(104, 144, 240);

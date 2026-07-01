@@ -79,21 +79,26 @@ const Pokedex = ({ version, dexKey, entries, victiniClause }: PokedexProps) => {
   const SkeletonPokemonCard = () => {
     return (
       <Card
-        className="cursor-pointer"
         orientation="vertical"
+        bg="var(--secondary)"
         w={`${isMobile ? "10rem" : "13rem"}`}
-        withBorder
         shadow="sm"
       >
-        <Skeleton h={`${isMobile ? "4rem" : "6rem"}`} visible={true} />
+        <Skeleton
+          className="custom-skeleton"
+          h={`${isMobile ? "4rem" : "6rem"}`}
+          visible={true}
+        />
         <Flex direction="column" align="center" className="mt-2">
           <Flex direction="row" align="center" gap="0.5rem" mb="0.5rem">
             <Skeleton
+              className="custom-skeleton"
               h={`${isMobile ? "1rem" : "1.5rem"}`}
               w={`${isMobile ? "2rem" : "3rem"}`}
               visible={true}
             />
             <Skeleton
+              className="custom-skeleton"
               h={`${isMobile ? "1rem" : "1.5rem"}`}
               w={`${isMobile ? "4rem" : "7rem"}`}
               visible={true}
@@ -101,11 +106,13 @@ const Pokedex = ({ version, dexKey, entries, victiniClause }: PokedexProps) => {
           </Flex>
           <Flex direction="row" gap="0.5rem" w="100%">
             <Skeleton
+              className="custom-skeleton"
               h={`${isMobile ? "1rem" : "1.5rem"}`}
               w="50%"
               visible={true}
             />
             <Skeleton
+              className="custom-skeleton"
               h={`${isMobile ? "1rem" : "1.5rem"}`}
               w="50%"
               visible={true}
@@ -122,8 +129,8 @@ const Pokedex = ({ version, dexKey, entries, victiniClause }: PokedexProps) => {
         style={style}
         className="cursor-pointer"
         orientation="vertical"
+        bg="var(--secondary)"
         w={`${isMobile ? "10rem" : "13rem"}`}
-        withBorder
         shadow="sm"
         onClick={() => {
           router.push(`/pokemon/${pokemon?.entryNumber}`);
@@ -140,12 +147,12 @@ const Pokedex = ({ version, dexKey, entries, victiniClause }: PokedexProps) => {
             <Badge
               variant="outline"
               size={`${isMobile ? "sm" : "lg"}`}
-              color="rgb(0, 0, 0)"
+              color="white"
             >
               {`#${badgeNumber}`}
             </Badge>
             {pokemon && (
-              <Text size={`${isMobile ? "xs" : "md"}`}>
+              <Text c="white" size={`${isMobile ? "xs" : "md"}`}>
                 {capitalizeFirstLetter(pokemon.name)}
               </Text>
             )}
