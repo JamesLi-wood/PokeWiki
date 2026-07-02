@@ -4,6 +4,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useMediaQuery, useDisclosure } from "@mantine/hooks";
 import { Drawer, SegmentedControl, Button } from "@mantine/core";
 import Pokedex from "@/components/pokedex";
+import ErrorPage from "@/components/errorPage";
 import usePokedex from "@/hooks/usePokedex";
 import gameVersion from "@/utils/gameVersion";
 
@@ -12,8 +13,10 @@ type dexVersion = "regional" | "national";
 const Page = () => {
   const slug = useParams().region;
 
-  if (typeof slug !== "string") return <div>ERROR</div>;
-  if (!(slug in gameVersion)) return <div>Game version not found</div>;
+  if (typeof slug !== "string")
+    return <ErrorPage title={"MissingNo has appeared."} />;
+  if (!(slug in gameVersion))
+    return <ErrorPage title={"This region doesn't exist... yet."} />;
 
   const version = slug as keyof typeof gameVersion;
   const gameTitles = Object.entries(gameVersion).map(([key, game]) => ({
