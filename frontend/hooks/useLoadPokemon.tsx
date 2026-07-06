@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getPokemon } from "@/lib/getPokemon";
+import { getPokemonBatch } from "@/lib/getPokemonBatch";
 
 type pokemonEntries = {
   name: string;
@@ -14,7 +14,7 @@ export default function useLoadPokemon(
   const [page, setPage] = useState(0);
   const { data: pokemons, isLoading } = useQuery({
     queryKey: ["pokemon-page", dexKey, page],
-    queryFn: () => getPokemon(page, entries, BATCH),
+    queryFn: () => getPokemonBatch(page, entries, BATCH),
     staleTime: Infinity,
   });
   const BATCH = 49;
