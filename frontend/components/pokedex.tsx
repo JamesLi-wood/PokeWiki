@@ -133,7 +133,7 @@ const Pokedex = ({ version, dexKey, entries, victiniClause }: PokedexProps) => {
         w={`${isMobile ? "10rem" : "13rem"}`}
         shadow="sm"
         onClick={() => {
-          router.push(`/pokemon/${pokemon?.entryNumber}`);
+          router.push(`/pokemon/${pokemon.name}`);
         }}
       >
         <Image
