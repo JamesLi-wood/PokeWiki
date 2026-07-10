@@ -1,7 +1,9 @@
 "use client";
 import { useParams } from "next/navigation";
-import ErrorPage from "@/components/errorPage";
+import { Badge } from "@mantine/core";
+import { useMediaQuery } from "@mantine/hooks";
 import useGetPokemon from "@/hooks/useGetPokemon";
+import ErrorPage from "@/components/errorPage";
 
 const Page = () => {
   const slug = useParams().name;
@@ -9,15 +11,61 @@ const Page = () => {
   if (typeof slug !== "string")
     return <ErrorPage title={"MissingNo has appeared."} />;
 
-  const { data, isLoading, error, isError } = useGetPokemon(slug);
+  const { pokemon, isLoading, error, isError } = useGetPokemon(slug);
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
   if (isError && error) return <ErrorPage title={error.message} />;
-
   if (isLoading) return <div>LOADING</div>;
-  
+
+  const DisplayAbility = () => {
+    const regularAbilities = pokemon?.abilities.filter(
+      (ability) => ability.is_hidden == false,
+    );
+    const hiddenAbilities = pokemon?.abilities.filter(
+      (ability) => ability.is_hidden == true,
+    );
+
+    return (
+      <div className="flex gap-4">
+        <div className="gap-2 flex flex-col items-center">
+          <div>Abilities</div>
+          <div className="flex gap-2">
+            {regularAbilities?.map((pokemon) => (
+              <Badge
+                key={pokemon.ability.name}
+                size={`${isMobile ? "sm" : "lg"}`}
+              >
+                {pokemon.ability.name}
+              </Badge>
+            ))}
+          </div>
+        </div>
+
+        {(hiddenAbilities?.length ?? 0) > 0 && (
+          <div className="gap-2 flex flex-col items-center">
+            <div>Hidden Abilities</div>
+            <div className="flex gap-2">
+              {hiddenAbilities?.map((pokemon) => (
+                <Badge
+                  key={pokemon.ability.name}
+                  color="grape"
+                  size={`${isMobile ? "sm" : "lg"}`}
+                >
+                  {pokemon.ability.name}
+                </Badge>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  };
+
   return (
-    <div>
-      <div>{data.name}</div>
+    <div className={`${isMobile ? "text-xs mx-auto" : "text-xl"}`}>
+      <div>{pokemon?.species.name}</div>
+      <div>{pokemon?.id}</div>
+      <DisplayAbility />
     </div>
   );
 };
