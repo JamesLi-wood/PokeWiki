@@ -12,19 +12,20 @@ const Page = () => {
   if (typeof slug !== "string")
     return <ErrorPage title={"MissingNo has appeared."} />;
 
-  const { pokemon, isLoading, error, isError } = useGetPokemon(slug);
+  const { pokemonSpecies, pokemonData, isLoading, error, isError } =
+    useGetPokemon(slug);
   const isMobile = useMediaQuery("(max-width: 768px)");
 
   if (isError && error) return <ErrorPage title={error.message} />;
   if (isLoading) return <div>LOADING</div>;
 
   const DisplayAbility = () => {
-    if (!pokemon) return;
+    if (!pokemonData) return;
 
-    const regularAbilities = pokemon.abilities.filter(
+    const regularAbilities = pokemonData.abilities.filter(
       (ability) => ability.is_hidden == false,
     );
-    const hiddenAbilities = pokemon.abilities.filter(
+    const hiddenAbilities = pokemonData.abilities.filter(
       (ability) => ability.is_hidden == true,
     );
 
@@ -33,12 +34,12 @@ const Page = () => {
         <div className="gap-2 flex flex-1 flex-col items-center">
           <div>Abilities</div>
           <div className="flex flex-wrap justify-center gap-2">
-            {regularAbilities.map((pokemon) => (
+            {regularAbilities.map((pokemonData) => (
               <Badge
-                key={pokemon.ability.name}
+                key={pokemonData.ability.name}
                 size={`${isMobile ? "sm" : "lg"}`}
               >
-                {pokemon.ability.name}
+                {pokemonData.ability.name}
               </Badge>
             ))}
           </div>
@@ -48,13 +49,13 @@ const Page = () => {
           <div className="gap-2 flex flex-1 flex-col items-center">
             <div>Hidden Ability</div>
             <div className="flex flex-wrap justify-center gap-2">
-              {hiddenAbilities?.map((pokemon) => (
+              {hiddenAbilities?.map((pokemonData) => (
                 <Badge
-                  key={pokemon.ability.name}
+                  key={pokemonData.ability.name}
                   color="grape"
                   size={`${isMobile ? "sm" : "lg"}`}
                 >
-                  {pokemon.ability.name}
+                  {pokemonData.ability.name}
                 </Badge>
               ))}
             </div>
@@ -65,26 +66,26 @@ const Page = () => {
   };
 
   const DisplayPokemon = () => {
-    if (!pokemon) return;
+    if (!pokemonData) return;
 
     return (
       <div className="flex flex-col items-center gap-2">
         <div className="flex gap-4">
-          <div>{`#${pokemon.id}`}</div>
-          <div>{capitalizeFirstLetter(pokemon.species.name)}</div>
+          <div>{`#${pokemonData.id}`}</div>
+          <div>{capitalizeFirstLetter(pokemonData.species.name)}</div>
         </div>
 
         <div className="flex gap-2">
           <Image
-            src={pokemon.sprites.other.home.front_default}
-            alt={pokemon.species.name}
+            src={pokemonData.sprites.other.home.front_default}
+            alt={pokemonData.species.name}
             w={`${isMobile ? "7rem" : "10rem"}`}
             h="auto"
             fit="contain"
           />
           <Image
-            src={pokemon.sprites.other.home.front_shiny}
-            alt={pokemon.species.name}
+            src={pokemonData.sprites.other.home.front_shiny}
+            alt={pokemonData.species.name}
             w={`${isMobile ? "7rem" : "10rem"}`}
             h="auto"
             fit="contain"
@@ -94,10 +95,15 @@ const Page = () => {
     );
   };
 
+  const HeldItem = () => {
+    return <div>Held Item</div>;
+  };
+
   return (
     <div className={`${isMobile ? "text-xs mx-auto w-[85%]" : "text-xl"}`}>
       <DisplayPokemon />
       <DisplayAbility />
+      <HeldItem />
     </div>
   );
 };
