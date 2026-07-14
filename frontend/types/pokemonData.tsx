@@ -1,9 +1,11 @@
+type NameWithURL = {
+  name: string;
+  url: string;
+};
+
 export type PokemonData = {
   abilities: {
-    ability: {
-      name: string;
-      url: string;
-    };
+    ability: NameWithURL;
     is_hidden: boolean;
     slot: number;
   }[];
@@ -12,93 +14,57 @@ export type PokemonData = {
     latest: string;
     legacy: string | null;
   };
-  forms: { name: string; url: string }[];
+  forms: NameWithURL[];
   game_indices: {
     game_index: number;
-    version: {
-      name: string;
-      url: string;
-    };
+    version: NameWithURL;
   }[];
   height: number;
   held_items: {
-    item: {
-      name: string;
-      url: string;
-    };
+    item: NameWithURL;
     version_details: {
       rarity: number;
-      version: {
-        name: string;
-        url: string;
-      };
+      version: NameWithURL;
     }[];
   }[];
   id: number;
   is_default: boolean;
   location_area_encounters: string;
   moves: {
-    move: {
-      name: string;
-      url: string;
-    };
+    move: NameWithURL;
     version_group_details: {
       level_learned_at: number;
-      move_learn_method: {
-        name: string;
-        url: string;
-      };
+      move_learn_method: NameWithURL;
       order: number | null;
-      version_group: {
-        name: string;
-        url: string;
-      };
+      version_group: NameWithURL;
     }[];
   }[];
   name: string;
   order: number;
   past_abilities: {
     abilities: {
-      abilitiy: {
-        name: string;
-        url: string;
-      } | null;
+      abilitiy: NameWithURL | null;
       is_hidden: boolean;
       slot: number;
     }[];
-    generation: {
-      name: string;
-      url: string;
-    };
+    generation: NameWithURL;
   }[];
   past_stats: {
-    generation: {
-      name: string;
-      url: string;
-    };
+    generation: NameWithURL;
     stats: {
       base_stat: number;
       effort: number;
-      stat: {
-        name: string;
-        url: string;
-      };
+      stat: NameWithURL;
     }[];
   }[];
   past_types: {
-    generation: {
-      name: string;
-      url: string;
-    };
+    generation: NameWithURL;
     types: {
       slot: number;
-      type: {
-        name: string;
-        url: string;
-      };
+      type: NameWithURL;
     }[];
   }[];
-  species: { name: string; url: string };
+  species: NameWithURL;
   sprites: {
     back_default: string;
     back_female: string | null;
@@ -292,17 +258,11 @@ export type PokemonData = {
   stats: {
     base_stat: number;
     effort: number;
-    stat: {
-      name: string;
-      url: string;
-    };
+    stat: NameWithURL;
   }[];
   types: {
     slot: number;
-    type: {
-      name: string;
-      url: string;
-    };
+    type: NameWithURL;
   }[];
   weight: number;
 };

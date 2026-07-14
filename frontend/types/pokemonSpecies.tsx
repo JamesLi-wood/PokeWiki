@@ -1,51 +1,35 @@
+type NameWithURL = {
+  name: string;
+  url: string;
+};
+
 export type PokemonSpecies = {
   base_happiness: number;
   capture_rate: number;
-  color: {
-    name: string;
-    url: string;
-  };
-  egg_groups: {
-    name: string;
-    url: string;
-  }[];
+  color: NameWithURL;
+  egg_groups: NameWithURL[];
   evolution_chain: {
     url: string;
   };
-  evolves_from_species: {
-    name: string;
-    url: string;
-  } | null;
+  evolves_from_species: NameWithURL | null;
   flavor_text_entries: {
     flavor_text: string;
-    language: { name: string; url: string };
-    version: { name: string; url: string };
+    language: NameWithURL;
+    version: NameWithURL;
   };
   form_descriptions: {
     descripton: string;
-    language: {
-      name: string;
-      url: string;
-    };
+    language: NameWithURL;
   }[];
   forms_switchable: boolean;
   gender_rate: number;
   genera: {
     genus: string;
-    language: {
-      name: string;
-      url: string;
-    };
+    language: NameWithURL;
   }[];
-  generation: {
-    name: string;
-    url: string;
-  };
-  growth_rate: {
-    name: string;
-    url: string;
-  };
-  habitat: { name: string; url: string } | null;
+  generation: NameWithURL;
+  growth_rate: NameWithURL;
+  habitat: NameWithURL | null;
   has_gender_differences: boolean;
   hatch_counter: number;
   id: number;
@@ -54,37 +38,22 @@ export type PokemonSpecies = {
   is_mythical: boolean;
   name: string;
   names: {
-    language: {
-      name: string;
-      url: string;
-    };
+    language: NameWithURL;
     name: string;
   }[];
   order: number;
   pal_park_encounters: {
-    area: {
-      name: string;
-      url: string;
-    };
+    area: NameWithURL;
     base_score: number;
     rate: number;
   }[];
   pokedex_numbers: {
     entry_number: number;
-    pokedex: {
-      name: string;
-      url: string;
-    };
+    pokedex: NameWithURL;
   }[];
-  shape: {
-    name: string;
-    url: string;
-  };
+  shape: NameWithURL;
   varieties: {
     is_default: boolean;
-    pokemon: {
-      name: string;
-      url: string;
-    };
+    pokemon: NameWithURL;
   }[];
 };
