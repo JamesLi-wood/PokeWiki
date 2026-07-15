@@ -12,6 +12,7 @@ export default function useGetPokemon(name: string) {
   return {
     pokemonSpecies: data?.pokemonSpecies,
     pokemonData: data?.pokemonData,
+    evolutionChain: data?.evolutionChain,
     error,
     isError,
     isLoading,
