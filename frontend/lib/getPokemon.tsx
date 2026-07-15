@@ -1,9 +1,11 @@
-import { PokemonData } from "@/types/pokemonData";
 import { PokemonSpecies } from "@/types/pokemonSpecies";
+import { PokemonData } from "@/types/pokemonData";
+import { EvolutionChain } from "@/types/evolutionChain";
 
 type PokemonResponse = {
   pokemonSpecies: PokemonSpecies;
   pokemonData: PokemonData;
+  evolutionChain: EvolutionChain;
 };
 
 export const getPokemon = async (name: string): Promise<PokemonResponse> => {
@@ -11,7 +13,6 @@ export const getPokemon = async (name: string): Promise<PokemonResponse> => {
     `https://pokeapi.co/api/v2/pokemon-species/${name}`,
   );
   if (!speciesResponse.ok) throw new Error("Pokemon not found.");
-
   const pokemonSpecies = await speciesResponse.json();
 
   const dataResponse = await fetch(
@@ -19,5 +20,10 @@ export const getPokemon = async (name: string): Promise<PokemonResponse> => {
   );
   const pokemonData = await dataResponse.json();
 
-  return { pokemonSpecies, pokemonData };
+  const evolutionChainResponse = await fetch(
+    pokemonSpecies.evolution_chain.url,
+  );
+  const evolutionChain = await evolutionChainResponse.json();
+
+  return { pokemonSpecies, pokemonData, evolutionChain };
 };
