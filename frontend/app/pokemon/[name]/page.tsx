@@ -5,6 +5,7 @@ import { useMediaQuery } from "@mantine/hooks";
 import useGetPokemon from "@/hooks/useGetPokemon";
 import ErrorPage from "@/components/errorPage";
 import capitalizeFirstLetter from "@/utils/capitalizeFirstLetter";
+import { Chain } from "@/types/evolutionChain";
 
 const Page = () => {
   const slug = useParams().name;
@@ -12,8 +13,14 @@ const Page = () => {
   if (typeof slug !== "string")
     return <ErrorPage title={"MissingNo has appeared."} />;
 
-  const { pokemonSpecies, pokemonData, isLoading, error, isError } =
-    useGetPokemon(slug);
+  const {
+    pokemonSpecies,
+    pokemonData,
+    evolutionChain,
+    isLoading,
+    error,
+    isError,
+  } = useGetPokemon(slug);
   const isMobile = useMediaQuery("(max-width: 768px)");
 
   if (isError && error) return <ErrorPage title={error.message} />;
@@ -73,6 +80,16 @@ const Page = () => {
         <div className="flex gap-4">
           <div>{`#${pokemonData.id}`}</div>
           <div>{capitalizeFirstLetter(pokemonData.species.name)}</div>
+          {pokemonSpecies?.is_legendary && (
+            <Badge color="orange" size={`${isMobile ? "sm" : "lg"}`}>
+              Legendary
+            </Badge>
+          )}
+          {pokemonSpecies?.is_mythical && (
+            <Badge color="red" size={`${isMobile ? "sm" : "lg"}`}>
+              Mythical
+            </Badge>
+          )}
         </div>
 
         <div className="flex gap-2">
@@ -95,15 +112,46 @@ const Page = () => {
     );
   };
 
-  const HeldItem = () => {
-    return <div>Held Item</div>;
+  const EvolutionChain = ({ chain }: { chain: Chain }) => {
+    if (chain.evolves_to.length == 0 && chain.evolution_details.length == 0)
+      return;
+
+    const upToDateEvolution = chain.evolution_details.filter((key) => {
+      return key.is_default == true;
+    })[0];
+    const id = chain.species.url.split("/").filter(Boolean).pop();
+
+    return (
+      <>
+        {upToDateEvolution && <div>{upToDateEvolution.trigger.name}</div>}
+        <div className="flex flex-col items-center">
+          <Image
+            src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${id}.png`}
+            alt={`${chain.species.name}`}
+            w={`${isMobile ? "5rem" : "7rem"}`}
+            h="auto"
+            fit="contain"
+          />
+          <div>{chain.species.name}</div>
+        </div>
+
+        {chain.evolves_to.map((child) => (
+          <EvolutionChain key={child.species.name} chain={child} />
+        ))}
+      </>
+    );
   };
 
   return (
     <div className={`${isMobile ? "text-xs mx-auto w-[85%]" : "text-xl"}`}>
       <DisplayPokemon />
       <DisplayAbility />
-      <HeldItem />
+
+      {evolutionChain && (
+        <div className="flex items-center">
+          <EvolutionChain chain={evolutionChain.chain} />
+        </div>
+      )}
     </div>
   );
 };
