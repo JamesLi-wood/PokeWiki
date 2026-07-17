@@ -26,6 +26,10 @@ const Page = () => {
   if (isError && error) return <ErrorPage title={error.message} />;
   if (isLoading) return <div>LOADING</div>;
 
+  console.log(pokemonSpecies);
+  console.log(pokemonData);
+  console.log(evolutionChain);
+
   const DisplayAbility = () => {
     if (!pokemonData) return;
 
@@ -113,6 +117,7 @@ const Page = () => {
   };
 
   const EvolutionChain = ({ chain }: { chain: Chain }) => {
+    // For pokemons that don't evolve
     if (chain.evolves_to.length == 0 && chain.evolution_details.length == 0)
       return;
 
@@ -123,21 +128,37 @@ const Page = () => {
 
     return (
       <>
-        {upToDateEvolution && <div>{upToDateEvolution.trigger.name}</div>}
-        <div className="flex flex-col items-center">
-          <Image
-            src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${id}.png`}
-            alt={`${chain.species.name}`}
-            w={`${isMobile ? "5rem" : "7rem"}`}
-            h="auto"
-            fit="contain"
-          />
-          <div>{chain.species.name}</div>
+        <div className="flex">
+          <div className="flex items-center">
+            {upToDateEvolution && <div>{`-->`}</div>}
+            <div className="flex flex-col items-center">
+              <Image
+                src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${id}.png`}
+                alt={`${chain.species.name}`}
+                w={`${isMobile ? "5rem" : "7rem"}`}
+                h="auto"
+                fit="contain"
+              />
+              <div>{chain.species.name}</div>
+            </div>
+          </div>
+
+          {chain.evolves_to.length == 1 && (
+            <>
+              {chain.evolves_to.map((child) => (
+                <EvolutionChain key={child.species.name} chain={child} />
+              ))}
+            </>
+          )}
         </div>
 
-        {chain.evolves_to.map((child) => (
-          <EvolutionChain key={child.species.name} chain={child} />
-        ))}
+        {chain.evolves_to.length >= 2 && (
+          <div className="flex flex-col">
+            {chain.evolves_to.map((child) => (
+              <EvolutionChain key={child.species.name} chain={child} />
+            ))}
+          </div>
+        )}
       </>
     );
   };
@@ -148,7 +169,7 @@ const Page = () => {
       <DisplayAbility />
 
       {evolutionChain && (
-        <div className="flex items-center">
+        <div className="flex justify-center">
           <EvolutionChain chain={evolutionChain.chain} />
         </div>
       )}
