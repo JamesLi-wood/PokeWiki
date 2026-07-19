@@ -1,6 +1,6 @@
 "use client";
 import { useParams } from "next/navigation";
-import { Badge, Image } from "@mantine/core";
+import { Badge, Card, Image } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import useGetPokemon from "@/hooks/useGetPokemon";
 import ErrorPage from "@/components/errorPage";
@@ -128,20 +128,16 @@ const Page = () => {
 
     return (
       <>
-        <div className="flex">
-          <div className="flex items-center">
-            {upToDateEvolution && <div>{`-->`}</div>}
-            <div className="flex flex-col items-center">
-              <Image
-                src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${id}.png`}
-                alt={`${chain.species.name}`}
-                w={`${isMobile ? "5rem" : "7rem"}`}
-                h="auto"
-                fit="contain"
-              />
-              <div>{chain.species.name}</div>
-            </div>
-          </div>
+        <div className="flex gap-2 items-center">
+          {upToDateEvolution && <div className="w-2 h-2 bg-green-500"></div>}
+          <Card bg="var(--secondary)" w={`${isMobile ? "6rem" : "10rem"}`}>
+            <Image
+              src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${id}.png`}
+              alt={`${chain.species.name}`}
+              h={`${isMobile ? "4rem" : "7rem"}`}
+              fit="contain"
+            />
+          </Card>
 
           {chain.evolves_to.length == 1 && (
             <>
@@ -153,7 +149,7 @@ const Page = () => {
         </div>
 
         {chain.evolves_to.length >= 2 && (
-          <div className="flex flex-col">
+          <div className="flex flex-col gap-4">
             {chain.evolves_to.map((child) => (
               <EvolutionChain key={child.species.name} chain={child} />
             ))}
@@ -169,7 +165,7 @@ const Page = () => {
       <DisplayAbility />
 
       {evolutionChain && (
-        <div className="flex justify-center">
+        <div className="flex justify-center gap-2">
           <EvolutionChain chain={evolutionChain.chain} />
         </div>
       )}
