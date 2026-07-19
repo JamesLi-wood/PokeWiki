@@ -131,7 +131,6 @@ const Pokedex = ({ version, dexKey, entries, victiniClause }: PokedexProps) => {
         orientation="vertical"
         bg="var(--secondary)"
         w={`${isMobile ? "10rem" : "13rem"}`}
-        shadow="sm"
         onClick={() => {
           router.push(`/pokemon/${pokemon.name}`);
         }}
