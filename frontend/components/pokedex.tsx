@@ -12,6 +12,7 @@ import {
   Transition,
 } from "@mantine/core";
 import { useMediaQuery, useScrollIntoView } from "@mantine/hooks";
+import LoadPkmnType from "./loadPkmnType";
 import capitalizeFirstLetter from "@/utils/capitalizeFirstLetter";
 import gameVersion from "@/utils/gameVersion";
 
@@ -23,14 +24,6 @@ type PokedexProps = {
     url: string;
   }[];
   victiniClause: boolean;
-};
-
-type pkmnType = {
-  slot: number;
-  type: {
-    name: string;
-    url: string;
-  };
 };
 
 type PokemonCardProps = {
@@ -63,18 +56,6 @@ const Pokedex = ({ version, dexKey, entries, victiniClause }: PokedexProps) => {
       setTransition(true);
     }
   }, [isLoading]);
-
-  const LoadTypes = ({ types }: { types: pkmnType[] }) => {
-    return types.map((data) => (
-      <Badge
-        key={data.slot}
-        style={{ backgroundColor: `var(--${data.type.name})` }}
-        size={`${isMobile ? "xs" : "md"}`}
-      >
-        {data.type.name}
-      </Badge>
-    ));
-  };
 
   const SkeletonPokemonCard = () => {
     return (
@@ -156,31 +137,38 @@ const Pokedex = ({ version, dexKey, entries, victiniClause }: PokedexProps) => {
               </Text>
             )}
           </Flex>
-          <Flex direction="row" gap="0.5rem">
-            <>
-              {(() => {
-                switch (version) {
-                  case "rs":
-                  case "frlg":
-                  case "emerald":
-                  case "dp":
-                  case "platinum":
-                  case "hgss":
-                  case "bw":
-                  case "bw2":
-                    if (pokemon)
-                      return pokemon.pastTypes.length > 0 ? (
-                        <LoadTypes types={pokemon.pastTypes} />
-                      ) : (
-                        <LoadTypes types={pokemon.currentTypes} />
-                      );
-                  default:
-                    if (pokemon)
-                      return <LoadTypes types={pokemon.currentTypes} />;
-                }
-              })()}
-            </>
-          </Flex>
+          <>
+            {(() => {
+              switch (version) {
+                case "rs":
+                case "frlg":
+                case "emerald":
+                case "dp":
+                case "platinum":
+                case "hgss":
+                case "bw":
+                case "bw2":
+                  return pokemon.pastTypes.length > 0 ? (
+                    <LoadPkmnType
+                      types={pokemon.pastTypes}
+                      isMobile={isMobile}
+                    />
+                  ) : (
+                    <LoadPkmnType
+                      types={pokemon.currentTypes}
+                      isMobile={isMobile}
+                    />
+                  );
+                default:
+                  return (
+                    <LoadPkmnType
+                      types={pokemon.currentTypes}
+                      isMobile={isMobile}
+                    />
+                  );
+              }
+            })()}
+          </>
         </Flex>
       </Card>
     );
@@ -188,7 +176,7 @@ const Pokedex = ({ version, dexKey, entries, victiniClause }: PokedexProps) => {
 
   return (
     <div ref={targetRef} className="flex justify-center flex-wrap gap-3 m-5">
-      {isLoading ? (
+      {isLoading || !pokemons ? (
         Array(50)
           .fill(null)
           .map((_, idx) => {
@@ -197,7 +185,7 @@ const Pokedex = ({ version, dexKey, entries, victiniClause }: PokedexProps) => {
       ) : (
         <div className="flex flex-col items-center">
           <div className="flex justify-center flex-wrap gap-3 mb-5">
-            {pokemons?.map((pokemon, idx) => {
+            {pokemons.map((pokemon, idx) => {
               return (
                 <Transition
                   key={idx}
