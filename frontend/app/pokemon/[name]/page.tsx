@@ -3,6 +3,7 @@ import { useParams } from "next/navigation";
 import { Badge, Card, Image } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import useGetPokemon from "@/hooks/useGetPokemon";
+import LoadPkmnType from "@/components/loadPkmnType";
 import ErrorPage from "@/components/errorPage";
 import capitalizeFirstLetter from "@/utils/capitalizeFirstLetter";
 import { Chain } from "@/types/evolutionChain";
@@ -25,10 +26,6 @@ const Page = () => {
 
   if (isError && error) return <ErrorPage title={error.message} />;
   if (isLoading) return <div>LOADING</div>;
-
-  console.log(pokemonSpecies);
-  console.log(pokemonData);
-  console.log(evolutionChain);
 
   const DisplayAbility = () => {
     if (!pokemonData) return;
@@ -95,6 +92,8 @@ const Page = () => {
             </Badge>
           )}
         </div>
+
+        <LoadPkmnType types={pokemonData.types} isMobile={isMobile} />
 
         <div className="flex gap-2">
           <Image
