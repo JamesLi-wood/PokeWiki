@@ -1,6 +1,6 @@
 "use client";
 import { useParams } from "next/navigation";
-import { Badge, Card, Image } from "@mantine/core";
+import { Badge, Card, Image, NumberFormatter } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import useGetPokemon from "@/hooks/useGetPokemon";
 import LoadPkmnType from "@/components/loadPkmnType";
@@ -74,11 +74,11 @@ const Page = () => {
   };
 
   const DisplayPokemon = () => {
-    if (!pokemonData) return;
+    if (!pokemonData || !pokemonSpecies) return;
 
     return (
       <div className="flex flex-col items-center gap-2">
-        <div className="flex gap-4">
+        <div className="flex gap-2">
           <div>{`#${pokemonData.id}`}</div>
           <div>{capitalizeFirstLetter(pokemonData.species.name)}</div>
           {pokemonSpecies?.is_legendary && (
@@ -158,16 +158,110 @@ const Page = () => {
     );
   };
 
+  const SpecialInfo = () => {
+    if (!pokemonSpecies || !pokemonData) return;
+
+    const expGrowthMax = {
+      "slow-then-very-fast": 600000,
+      fast: 800000,
+      medium: 1000000,
+      "medium-slow": 1059860,
+      slow: 1250000,
+      "fast-then-very-slow": 1640000,
+    };
+
+    const totalInches = Math.round((pokemonData.height / 10) * 39.3701);
+    const feet = Math.floor(totalInches / 12);
+    const inches = totalInches % 12;
+    const pounds = (pokemonData.weight / 10) * 2.20462;
+
+    const InfoTable = ({
+      children,
+      title,
+    }: {
+      children: React.ReactNode;
+      title: string;
+    }) => {
+      return (
+        <div className="border flex flex-col">
+          <div className="title border-b p-2">{title}</div>
+          <div className="flex flex-col flex-1 items-center justify-center p-1">
+            {children}
+          </div>
+        </div>
+      );
+    };
+
+    return (
+      <div className="[&_.title]:bg-blue-500 text-center grid grid-cols-3 gap-2">
+        <InfoTable title="Base Happiness">
+          {pokemonSpecies.base_happiness}
+        </InfoTable>
+        <InfoTable title="Capture Rate">
+          {pokemonSpecies.capture_rate}
+        </InfoTable>
+        <InfoTable title="Egg Groups">
+          {pokemonSpecies.egg_groups.map((group) => (
+            <div key={group.name}>{group.name}</div>
+          ))}
+        </InfoTable>
+        <InfoTable title="Experience Growth">
+          <div>{pokemonSpecies.growth_rate.name}</div>
+          <div>
+            <NumberFormatter
+              thousandSeparator
+              value={
+                expGrowthMax[
+                  pokemonSpecies.growth_rate.name as keyof typeof expGrowthMax
+                ]
+              }
+            />
+          </div>
+        </InfoTable>
+        <InfoTable title="Gender Rate">
+          {pokemonSpecies.gender_rate == -1 ? (
+            <>Genderless</>
+          ) : (
+            <>
+              <div>{`Male: ${100 - pokemonSpecies.gender_rate * 12.5}%`}</div>
+              <div>{`Female: ${pokemonSpecies.gender_rate * 12.5}%`}</div>
+            </>
+          )}
+        </InfoTable>
+        <InfoTable title="Base Egg Steps">
+          <div>
+            <NumberFormatter
+              thousandSeparator
+              value={pokemonSpecies.hatch_counter * 128}
+            />{" "}
+            Steps
+          </div>
+          <div>{`${pokemonSpecies.hatch_counter} Cycles`}</div>
+        </InfoTable>
+        <InfoTable title="Height">{`${feet}' ${inches}"`}</InfoTable>
+        <InfoTable title="Weight">{`${pounds.toFixed(1)} lbs`}</InfoTable>
+      </div>
+    );
+  };
+
+  const Stats = () => {
+    return <div></div>;
+  };
+
+  const Moves = () => {
+    return <div></div>;
+  };
+
   return (
-    <div className={`${isMobile ? "text-xs mx-auto w-[85%]" : "text-xl"}`}>
+    <div className={`${isMobile ? "text-xs mx-auto w-[90%]" : "text-xl"}`}>
       <DisplayPokemon />
       <DisplayAbility />
-
       {evolutionChain && (
         <div className="flex justify-center gap-2">
           <EvolutionChain chain={evolutionChain.chain} />
         </div>
       )}
+      <SpecialInfo />
     </div>
   );
 };
