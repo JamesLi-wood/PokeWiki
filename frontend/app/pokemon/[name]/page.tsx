@@ -38,7 +38,7 @@ const Page = () => {
     );
 
     return (
-      <div className="flex mt-4">
+      <div className={`${isMobile ? "flex-row" : "flex-col gap-5"} flex`}>
         <div className="gap-2 flex flex-1 flex-col items-center">
           <div>Abilities</div>
           <div className="flex flex-wrap justify-center gap-2">
@@ -77,16 +77,16 @@ const Page = () => {
     if (!pokemonData || !pokemonSpecies) return;
 
     return (
-      <div className="flex flex-col items-center gap-2">
-        <div className="flex gap-2">
+      <div className="flex flex-col items-center gap-4">
+        <div className="flex items-center gap-2 ">
           <div>{`#${pokemonData.id}`}</div>
           <div>{capitalizeFirstLetter(pokemonData.species.name)}</div>
-          {pokemonSpecies?.is_legendary && (
+          {pokemonSpecies.is_legendary && (
             <Badge color="orange" size={`${isMobile ? "sm" : "lg"}`}>
               Legendary
             </Badge>
           )}
-          {pokemonSpecies?.is_mythical && (
+          {pokemonSpecies.is_mythical && (
             <Badge color="red" size={`${isMobile ? "sm" : "lg"}`}>
               Mythical
             </Badge>
@@ -95,7 +95,7 @@ const Page = () => {
 
         <LoadPkmnType types={pokemonData.types} isMobile={isMobile} />
 
-        <div className="flex gap-2">
+        <div className="flex gap-8">
           <Image
             src={pokemonData.sprites.other.home.front_default}
             alt={pokemonData.species.name}
@@ -253,14 +253,20 @@ const Page = () => {
   };
 
   return (
-    <div className={`${isMobile ? "text-xs mx-auto w-[90%]" : "text-xl"}`}>
+    <div
+      className={`${isMobile ? "text-xs mx-auto w-[90%]" : "text-xl px-7"} flex flex-col gap-8`}
+    >
       <DisplayPokemon />
-      <DisplayAbility />
-      {evolutionChain && (
-        <div className="flex justify-center gap-2">
-          <EvolutionChain chain={evolutionChain.chain} />
-        </div>
-      )}
+      <div
+        className={`${isMobile ? "flex-col" : "flex-row items-center justify-center"} flex gap-4`}
+      >
+        <DisplayAbility />
+        {evolutionChain && (
+          <div className="flex justify-center gap-2">
+            <EvolutionChain chain={evolutionChain.chain} />
+          </div>
+        )}
+      </div>
       <SpecialInfo />
     </div>
   );
