@@ -1,5 +1,5 @@
 "use client";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { Badge, Card, Image, NumberFormatter } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import useGetPokemon from "@/hooks/useGetPokemon";
@@ -22,6 +22,7 @@ const Page = () => {
     error,
     isError,
   } = useGetPokemon(slug);
+  const router = useRouter();
   const isMobile = useMediaQuery("(max-width: 768px)");
 
   if (isError && error) return <ErrorPage title={error.message} />;
@@ -129,7 +130,14 @@ const Page = () => {
       <>
         <div className="flex gap-2 items-center">
           {upToDateEvolution && <div className="w-2 h-2 bg-green-500"></div>}
-          <Card bg="var(--secondary)" w={`${isMobile ? "6rem" : "10rem"}`}>
+          <Card
+            className="cursor-pointer"
+            bg="var(--secondary)"
+            w={`${isMobile ? "6rem" : "10rem"}`}
+            onClick={() => {
+              router.push(`/pokemon/${chain.species.name}`);
+            }}
+          >
             <Image
               src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${id}.png`}
               alt={`${chain.species.name}`}
@@ -193,7 +201,9 @@ const Page = () => {
     };
 
     return (
-      <div className="[&_.title]:bg-blue-500 text-center grid grid-cols-3 gap-2">
+      <div
+        className={`${!isMobile && "text-base"} [&_.title]:bg-blue-500 text-center grid grid-cols-3 gap-2`}
+      >
         <InfoTable title="Base Happiness">
           {pokemonSpecies.base_happiness}
         </InfoTable>
