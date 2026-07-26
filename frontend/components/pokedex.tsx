@@ -39,8 +39,10 @@ type PokemonCardProps = {
 
 const Pokedex = ({ version, dexKey, entries, victiniClause }: PokedexProps) => {
   const pokedex = gameVersion[version];
-  const { pokemons, isLoading, page, totalPages, paginate, BATCH } =
-    useLoadPokemon(dexKey, entries);
+  const { pokemons, isLoading, page, paginate, BATCH } = useLoadPokemon(
+    dexKey,
+    entries,
+  );
   const { scrollIntoView, targetRef } = useScrollIntoView<HTMLDivElement>({
     offset: 200,
     duration: 0,
@@ -206,7 +208,7 @@ const Pokedex = ({ version, dexKey, entries, victiniClause }: PokedexProps) => {
             })}
           </div>
           <Pagination
-            total={totalPages}
+            total={Math.ceil(entries.length / BATCH)}
             value={page + 1}
             onChange={(val) => {
               paginate(val);
