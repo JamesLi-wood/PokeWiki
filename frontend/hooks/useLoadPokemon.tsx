@@ -18,7 +18,6 @@ export default function useLoadPokemon(
     staleTime: Infinity,
   });
   const BATCH = 49;
-  const totalPages = Math.ceil(entries.length / BATCH);
 
   const paginate = (num: number) => {
     setPage(num - 1);
@@ -28,7 +27,6 @@ export default function useLoadPokemon(
     pokemons,
     isLoading,
     page,
-    totalPages,
     paginate,
     BATCH,
   };
