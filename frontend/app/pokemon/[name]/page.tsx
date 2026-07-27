@@ -1,11 +1,12 @@
 "use client";
 import { useParams, useRouter } from "next/navigation";
-import { Badge, Card, Image, NumberFormatter } from "@mantine/core";
+import { Badge, Card, Image, NumberFormatter, Progress } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import useGetPokemon from "@/hooks/useGetPokemon";
 import LoadPkmnType from "@/components/loadPkmnType";
 import ErrorPage from "@/components/errorPage";
 import capitalizeFirstLetter from "@/utils/capitalizeFirstLetter";
+import minMaxStat from "@/utils/minMaxStat";
 import { Chain } from "@/types/evolutionChain";
 
 const Page = () => {
@@ -120,6 +121,9 @@ const Page = () => {
     // For pokemons that don't evolve
     if (chain.evolves_to.length == 0 && chain.evolution_details.length == 0)
       return;
+
+    if (chain.species.name == "eevee")
+      return <div>{/* Special one for eevee where it wraps around */}</div>;
 
     const upToDateEvolution = chain.evolution_details.filter((key) => {
       return key.is_default == true;
@@ -255,7 +259,69 @@ const Page = () => {
   };
 
   const Stats = () => {
-    return <div></div>;
+    if (!pokemonData) return;
+
+    const total = pokemonData.stats.reduce(
+      (total, current) => total + current.base_stat,
+      0,
+    );
+    return (
+      <div className="flex flex-col gap-2">
+        {pokemonData.stats.map((stat) => {
+          const { minHP, maxHP, minStat, maxStat } = minMaxStat(
+            stat.base_stat,
+            100,
+          );
+          return (
+            <div
+              key={stat.stat.name}
+              className="grid grid-cols-[auto_1fr_auto] gap-4 items-center"
+            >
+              <div
+                className={`${isMobile ? "w-32" : "w-48"} flex justify-between`}
+              >
+                <div>{capitalizeFirstLetter(stat.stat.name)}</div>
+                <div>{stat.base_stat}</div>
+              </div>
+              <Progress
+                w="100%"
+                value={(stat.base_stat / 255) * 100}
+                size="lg"
+                transitionDuration={200}
+              />
+              <div
+                className={`${isMobile ? "w-15" : "w-22"} flex gap-4 justify-end`}
+              >
+                {stat.stat.name == "hp" ? (
+                  <>
+                    <div>{minHP}</div>
+                    <div>{maxHP}</div>
+                  </>
+                ) : (
+                  <>
+                    <div>{minStat}</div>
+                    <div>{maxStat}</div>
+                  </>
+                )}
+              </div>
+            </div>
+          );
+        })}
+        <div className="grid grid-cols-[auto_1fr_auto] gap-4 items-center">
+          <div className={`${isMobile ? "w-32" : "w-48"} flex justify-between`}>
+            <div>Total</div>
+            <div>{total}</div>
+          </div>
+          <div></div>
+          <div
+            className={`${isMobile ? "w-15" : "w-22"} flex gap-2 justify-end`}
+          >
+            <div>Min</div>
+            <div>Max</div>
+          </div>
+        </div>
+      </div>
+    );
   };
 
   const Moves = () => {
@@ -278,6 +344,7 @@ const Page = () => {
         )}
       </div>
       <SpecialInfo />
+      <Stats />
     </div>
   );
 };
