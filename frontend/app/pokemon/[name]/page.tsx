@@ -266,6 +266,15 @@ const Page = () => {
       0,
     );
 
+    const getColor = (num: number) => {
+      if (num <= 60) return "red";
+      if (num <= 80) return "orange";
+      if (num <= 100) return "green";
+      if (num <= 120) return "lime";
+      if (num <= 149) return "teal";
+      return "cyan";
+    };
+
     return (
       <div className="flex flex-col gap-2">
         {pokemonData.stats.map((stat) => {
@@ -273,6 +282,7 @@ const Page = () => {
             stat.base_stat,
             100,
           );
+
           return (
             <div
               key={stat.stat.name}
@@ -288,6 +298,7 @@ const Page = () => {
                 w="100%"
                 value={(stat.base_stat / 255) * 100}
                 size="lg"
+                color={getColor(stat.base_stat)}
                 transitionDuration={200}
               />
               <div
