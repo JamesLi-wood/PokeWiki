@@ -265,6 +265,7 @@ const Page = () => {
       (total, current) => total + current.base_stat,
       0,
     );
+
     return (
       <div className="flex flex-col gap-2">
         {pokemonData.stats.map((stat) => {
@@ -290,19 +291,10 @@ const Page = () => {
                 transitionDuration={200}
               />
               <div
-                className={`${isMobile ? "w-15" : "w-22"} flex gap-4 justify-end`}
+                className={`${isMobile ? "w-15" : "w-22"} flex justify-between`}
               >
-                {stat.stat.name == "hp" ? (
-                  <>
-                    <div>{minHP}</div>
-                    <div>{maxHP}</div>
-                  </>
-                ) : (
-                  <>
-                    <div>{minStat}</div>
-                    <div>{maxStat}</div>
-                  </>
-                )}
+                <div>{stat.stat.name == "hp" ? minHP : minStat}</div>
+                <div>{stat.stat.name == "hp" ? maxHP : maxStat}</div>
               </div>
             </div>
           );
@@ -313,9 +305,7 @@ const Page = () => {
             <div>{total}</div>
           </div>
           <div></div>
-          <div
-            className={`${isMobile ? "w-15" : "w-22"} flex gap-2 justify-end`}
-          >
+          <div className={`${isMobile ? "w-15" : "w-22"} flex justify-between`}>
             <div>Min</div>
             <div>Max</div>
           </div>
