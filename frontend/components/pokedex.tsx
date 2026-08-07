@@ -26,12 +26,17 @@ type PokedexProps = {
   victiniClause: boolean;
 };
 
+type TypeProps = {
+  slot: number;
+  type: { name: string; url: string };
+};
+
 type PokemonCardProps = {
   pokemon: {
     name: string;
     entryNumber: number;
-    currentTypes: [];
-    pastTypes: [];
+    currentTypes: TypeProps[];
+    pastTypes: TypeProps[];
   };
   badgeNumber: number;
   style: React.CSSProperties;
@@ -139,7 +144,7 @@ const Pokedex = ({ version, dexKey, entries, victiniClause }: PokedexProps) => {
               </Text>
             )}
           </Flex>
-          <>
+          <div className="flex gap-2">
             {(() => {
               switch (version) {
                 case "rs":
@@ -150,27 +155,31 @@ const Pokedex = ({ version, dexKey, entries, victiniClause }: PokedexProps) => {
                 case "hgss":
                 case "bw":
                 case "bw2":
-                  return pokemon.pastTypes.length > 0 ? (
-                    <LoadPkmnType
-                      types={pokemon.pastTypes}
-                      isMobile={isMobile}
-                    />
-                  ) : (
-                    <LoadPkmnType
-                      types={pokemon.currentTypes}
-                      isMobile={isMobile}
-                    />
-                  );
+                  return pokemon.pastTypes.length > 0
+                    ? pokemon.pastTypes.map((data) => (
+                        <LoadPkmnType
+                          type={data.type.name}
+                          isMobile={isMobile}
+                        />
+                      ))
+                    : pokemon.currentTypes.map((data) => (
+                        <LoadPkmnType
+                          key={data.slot}
+                          type={data.type.name}
+                          isMobile={isMobile}
+                        />
+                      ));
                 default:
-                  return (
+                  return pokemon.currentTypes.map((data) => (
                     <LoadPkmnType
-                      types={pokemon.currentTypes}
+                      key={data.slot}
+                      type={data.type.name}
                       isMobile={isMobile}
                     />
-                  );
+                  ));
               }
             })()}
-          </>
+          </div>
         </Flex>
       </Card>
     );
