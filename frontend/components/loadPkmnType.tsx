@@ -1,32 +1,19 @@
 import { Badge } from "@mantine/core";
 
-type pkmnType = {
-  slot: number;
-  type: {
-    name: string;
-    url: string;
-  };
-};
-
 const LoadPkmnType = ({
-  types,
+  type,
   isMobile,
 }: {
-  types: pkmnType[];
+  type: string;
   isMobile: boolean;
 }) => {
   return (
-    <div className="flex gap-2">
-      {types.map((data) => (
-        <Badge
-          key={data.slot}
-          style={{ backgroundColor: `var(--${data.type.name})` }}
-          size={`${isMobile ? "xs" : "md"}`}
-        >
-          {data.type.name}
-        </Badge>
-      ))}
-    </div>
+    <Badge
+      style={{ backgroundColor: `var(--${type})` }}
+      size={`${isMobile ? "xs" : "md"}`}
+    >
+      {type}
+    </Badge>
   );
 };
 
