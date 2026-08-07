@@ -3,7 +3,7 @@ import { useParams, useRouter } from "next/navigation";
 import { Badge, Card, Image, NumberFormatter, Progress } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import useGetPokemon from "@/hooks/useGetPokemon";
-import MoveSet from "@/components/moveSets";
+import MoveSet from "@/components/moveSet";
 import LoadPkmnType from "@/components/loadPkmnType";
 import ErrorPage from "@/components/errorPage";
 import capitalizeFirstLetter from "@/utils/capitalizeFirstLetter";
