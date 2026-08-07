@@ -3,6 +3,7 @@ import { useParams, useRouter } from "next/navigation";
 import { Badge, Card, Image, NumberFormatter, Progress } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import useGetPokemon from "@/hooks/useGetPokemon";
+import MoveSet from "@/components/moveSets";
 import LoadPkmnType from "@/components/loadPkmnType";
 import ErrorPage from "@/components/errorPage";
 import capitalizeFirstLetter from "@/utils/capitalizeFirstLetter";
@@ -95,7 +96,15 @@ const Page = () => {
           )}
         </div>
 
-        <LoadPkmnType types={pokemonData.types} isMobile={isMobile} />
+        <div className="flex gap-2">
+          {pokemonData.types.map((data) => (
+            <LoadPkmnType
+              key={data.slot}
+              type={data.type.name}
+              isMobile={isMobile}
+            />
+          ))}
+        </div>
 
         <div className="flex gap-8">
           <Image
@@ -326,7 +335,57 @@ const Page = () => {
   };
 
   const Moves = () => {
-    return <div></div>;
+    if (!pokemonData) return;
+
+    const tm = pokemonData.moves.filter((moveData) =>
+      moveData.version_group_details.some(
+        (detail) => detail.move_learn_method.name === "machine",
+      ),
+    );
+
+    const levelUp = pokemonData.moves
+      .filter((moveData) =>
+        moveData.version_group_details.some(
+          (detail) => detail.move_learn_method.name === "level-up",
+        ),
+      )
+      .sort((a, b) => {
+        const levelA = a.version_group_details.find(
+          (detail) => detail.move_learn_method.name === "level-up",
+        )!.level_learned_at;
+
+        const levelB = b.version_group_details.find(
+          (detail) => detail.move_learn_method.name === "level-up",
+        )!.level_learned_at;
+
+        return levelA - levelB;
+      });
+
+    return (
+      <div className="flex flex-wrap justify-center gap-8">
+        <div className="w-25rem max-w-full">
+          <div className="text-center mb-4">LEARNED MOVES</div>
+          <div>
+            {levelUp.map((move) => (
+              <MoveSet
+                key={move.move.name}
+                moveSet={move}
+                condition="level-up"
+              />
+            ))}
+          </div>
+        </div>
+
+        <div className="w-25rem max-w-full">
+          <div className="text-center mb-4">TM MOVES</div>
+          <div>
+            {tm.map((move) => (
+              <MoveSet key={move.move.name} moveSet={move} condition="tm" />
+            ))}
+          </div>
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -346,6 +405,7 @@ const Page = () => {
       </div>
       <SpecialInfo />
       <Stats />
+      <Moves />
     </div>
   );
 };
