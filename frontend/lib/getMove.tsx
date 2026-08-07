@@ -7,5 +7,5 @@ type MoveType = {
 export const getMove = async (url: string): Promise<MoveType> => {
   const moveResponse = await fetch(url);
   const moveData = await moveResponse.json();
-  return moveData;
+  return { moveData };
 };
