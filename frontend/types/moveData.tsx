@@ -58,7 +58,7 @@ export type MoveData = {
     min_hits: number | null;
     min_turns: number | null;
     stat_chance: number;
-  };
+  } | null;
   name: string;
   names: {
     language: NameWithURL;
