@@ -26,12 +26,14 @@ const MoveSet = ({ moveSet, condition }: Props) => {
       className="gap-4 mb-5"
       c="white"
       orientation="vertical"
-      bg="var(--secondary)"
+      bg="var(--secondary) url('/pokeball.png') no-repeat bottom left"
       maw="100%"
       w="25rem"
     >
       <div className="flex gap-4 items-center">
-        <div className="w-[70%]">{capitalizeFirstLetter(move.name)}</div>
+        <div className="w-[70%] font-bold text-lg">
+          {capitalizeFirstLetter(move.name)}
+        </div>
         <div className="flex flex-col gap-2 w-auto">
           <LoadPkmnType type={move.type.name} isMobile={isMobile} />
           <Image

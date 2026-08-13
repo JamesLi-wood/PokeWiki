@@ -204,9 +204,9 @@ const Page = () => {
       title: string;
     }) => {
       return (
-        <div className="border flex flex-col">
-          <div className="title border-b p-2">{title}</div>
-          <div className="flex flex-col flex-1 items-center justify-center p-1">
+        <div className="flex flex-col">
+          <div className="title p-2">{title}</div>
+          <div className="bg-(--secondary) flex flex-col flex-1 items-center justify-center p-2">
             {children}
           </div>
         </div>
@@ -215,7 +215,7 @@ const Page = () => {
 
     return (
       <div
-        className={`${!isMobile && "text-base"} [&_.title]:bg-blue-500 text-center grid grid-cols-3 gap-2`}
+        className={`${!isMobile && "text-base"} [&_.title]:bg-blue-500 text-center grid grid-cols-3 gap-4`}
       >
         <InfoTable title="Base Happiness">
           {pokemonSpecies.base_happiness}
@@ -285,7 +285,7 @@ const Page = () => {
     };
 
     return (
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2 bg-(--secondary) p-4 rounded-2xl">
         {pokemonData.stats.map((stat) => {
           const { minHP, maxHP, minStat, maxStat } = minMaxStat(
             stat.base_stat,
