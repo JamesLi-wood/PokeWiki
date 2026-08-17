@@ -362,10 +362,10 @@ const Page = () => {
       });
 
     return (
-      <div className="flex flex-wrap justify-center gap-8">
-        <div className="w-25rem max-w-full">
-          <div className="text-center mb-4">LEARNED MOVES</div>
-          <div>
+      <div className="flex flex-wrap justify-center gap-4">
+        <div className="min-w-1/2 max-w-full">
+          <div className="text-center mb-4 font-bold text-lg">LEARNED MOVES</div>
+          <div className="flex flex-wrap w-full justify-center gap-4">
             {levelUp.map((move) => (
               <MoveSet
                 key={move.move.name}
@@ -376,9 +376,9 @@ const Page = () => {
           </div>
         </div>
 
-        <div className="w-25rem max-w-full">
-          <div className="text-center mb-4">TM MOVES</div>
-          <div>
+        <div className="min-w-1/2 max-w-full">
+          <div className="text-center mb-4 font-bold text-lg">TM MOVES</div>
+          <div className="flex flex-wrap w-full justify-center gap-4">
             {tm.map((move) => (
               <MoveSet key={move.move.name} moveSet={move} condition="tm" />
             ))}

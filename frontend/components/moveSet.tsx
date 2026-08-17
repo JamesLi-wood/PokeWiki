@@ -23,7 +23,7 @@ const MoveSet = ({ moveSet, condition }: Props) => {
 
   return (
     <Card
-      className="gap-4 mb-5"
+      className="gap-4"
       c="white"
       orientation="vertical"
       bg="var(--secondary) url('/pokeball.png') no-repeat bottom left"
