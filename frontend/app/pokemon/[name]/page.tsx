@@ -37,7 +37,7 @@ const Page = () => {
   if (isError && error) return <ErrorPage title={error.message} />;
 
   // Page Skeleton
-  if (!isLoading || !pokemonData || !pokemonSpecies)
+  if (isLoading || !pokemonData || !pokemonSpecies)
     return (
       <div
         className={`${isMobile ? "mx-auto w-[90%]" : "px-7 w-full"} flex flex-col gap-8 items-center mx-auto`}
