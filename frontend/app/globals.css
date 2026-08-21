@@ -12,16 +12,17 @@ body,
 }
 
 /* Mantine Skeleton Component */
-.custom-skeleton::before {
-  background: linear-gradient(
-    90deg,
-    transparent,
-    var(--secondary),
-    transparent
-  );
+.skeleton-card-bg::before {
+  background: linear-gradient(90deg, inherit, var(--secondary), inherit);
 }
-.custom-skeleton::after {
+.skeleton-card-bg::after {
   background-color: var(--primary);
+}
+.skeleton-bg::before {
+  background: linear-gradient(90deg, inherit, var(--primary), inherit);
+}
+.skeleton-bg::after {
+  background-color: var(--secondary);
 }
 
 /* Mantine SegmentedControl Component */
