@@ -73,38 +73,35 @@ const Pokedex = ({ version, dexKey, entries, victiniClause }: PokedexProps) => {
         shadow="sm"
       >
         <Skeleton
-          className="custom-skeleton"
+          className="skeleton-card-bg"
           h={`${isMobile ? "4rem" : "6rem"}`}
           visible={true}
         />
         <Flex direction="column" align="center" className="mt-2">
           <Flex direction="row" align="center" gap="0.5rem" mb="0.5rem">
             <Skeleton
-              className="custom-skeleton"
+              className="skeleton-card-bg"
               h={`${isMobile ? "1rem" : "1.5rem"}`}
               w={`${isMobile ? "2rem" : "3rem"}`}
               visible={true}
             />
             <Skeleton
-              className="custom-skeleton"
+              className="skeleton-card-bg"
               h={`${isMobile ? "1rem" : "1.5rem"}`}
               w={`${isMobile ? "4rem" : "7rem"}`}
               visible={true}
             />
           </Flex>
           <Flex direction="row" gap="0.5rem" w="100%">
-            <Skeleton
-              className="custom-skeleton"
-              h={`${isMobile ? "1rem" : "1.5rem"}`}
-              w="50%"
-              visible={true}
-            />
-            <Skeleton
-              className="custom-skeleton"
-              h={`${isMobile ? "1rem" : "1.5rem"}`}
-              w="50%"
-              visible={true}
-            />
+            {Array.from({ length: 2 }, (_, idx) => (
+              <Skeleton
+                key={idx}
+                className="skeleton-card-bg"
+                h={`${isMobile ? "1rem" : "1.5rem"}`}
+                w="50%"
+                visible={true}
+              />
+            ))}
           </Flex>
         </Flex>
       </Card>
@@ -158,6 +155,7 @@ const Pokedex = ({ version, dexKey, entries, victiniClause }: PokedexProps) => {
                   return pokemon.pastTypes.length > 0
                     ? pokemon.pastTypes.map((data) => (
                         <LoadPkmnType
+                          key={data.slot}
                           type={data.type.name}
                           isMobile={isMobile}
                         />
@@ -188,11 +186,9 @@ const Pokedex = ({ version, dexKey, entries, victiniClause }: PokedexProps) => {
   return (
     <div ref={targetRef} className="flex justify-center flex-wrap gap-3 m-5">
       {isLoading || !pokemons ? (
-        Array(50)
-          .fill(null)
-          .map((_, idx) => {
-            return <SkeletonPokemonCard key={idx} />;
-          })
+        Array.from({ length: 49 }, (_, idx) => {
+          return <SkeletonPokemonCard key={idx} />;
+        })
       ) : (
         <div className="flex flex-col items-center">
           <div className="flex justify-center flex-wrap gap-3 mb-5">
