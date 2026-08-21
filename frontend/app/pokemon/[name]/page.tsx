@@ -1,6 +1,13 @@
 "use client";
 import { useParams, useRouter } from "next/navigation";
-import { Badge, Card, Image, NumberFormatter, Progress } from "@mantine/core";
+import {
+  Badge,
+  Card,
+  Image,
+  NumberFormatter,
+  Progress,
+  Skeleton,
+} from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import useGetPokemon from "@/hooks/useGetPokemon";
 import MoveSet from "@/components/moveSet";
@@ -28,57 +35,128 @@ const Page = () => {
   const isMobile = useMediaQuery("(max-width: 768px)");
 
   if (isError && error) return <ErrorPage title={error.message} />;
-  if (isLoading) return <div>LOADING</div>;
 
-  const DisplayAbility = () => {
-    if (!pokemonData) return;
-
-    const regularAbilities = pokemonData.abilities.filter(
-      (ability) => ability.is_hidden == false,
-    );
-    const hiddenAbilities = pokemonData.abilities.filter(
-      (ability) => ability.is_hidden == true,
-    );
-
+  // Page Skeleton
+  if (isLoading || !pokemonData || !pokemonSpecies)
     return (
-      <div className={`${isMobile ? "flex-row" : "flex-col gap-5"} flex`}>
-        <div className="gap-2 flex flex-1 flex-col items-center">
-          <div>Abilities</div>
-          <div className="flex flex-wrap justify-center gap-2">
-            {regularAbilities.map((pokemonData) => (
-              <Badge
-                key={pokemonData.ability.name}
-                size={`${isMobile ? "sm" : "lg"}`}
-              >
-                {pokemonData.ability.name}
-              </Badge>
+      <div
+        className={`${isMobile ? "mx-auto w-[90%]" : "px-7 w-full"} flex flex-col gap-8 items-center mx-auto`}
+      >
+        {/* Display Pokemon */}
+        <div className="flex flex-col items-center gap-4">
+          <Skeleton
+            className="skeleton-background"
+            h="1.5rem"
+            w="10rem"
+            visible={true}
+          />
+          <div className="flex gap-2">
+            {Array.from({ length: 2 }, (_, idx) => (
+              <Skeleton
+                key={idx}
+                className="skeleton-background"
+                h="1.5rem"
+                w="4rem"
+                visible={true}
+              />
+            ))}
+          </div>
+          <div className="flex gap-8">
+            {Array.from({ length: 2 }, (_, idx) => (
+              <Skeleton
+                key={idx}
+                className="skeleton-background"
+                h="10rem"
+                w="10rem"
+                visible={true}
+              />
             ))}
           </div>
         </div>
-
-        {(hiddenAbilities.length ?? 0) > 0 && (
-          <div className="gap-2 flex flex-1 flex-col items-center">
-            <div>Hidden Ability</div>
-            <div className="flex flex-wrap justify-center gap-2">
-              {hiddenAbilities?.map((pokemonData) => (
-                <Badge
-                  key={pokemonData.ability.name}
-                  color="grape"
-                  size={`${isMobile ? "sm" : "lg"}`}
-                >
-                  {pokemonData.ability.name}
-                </Badge>
+        <div className={`${isMobile ? "flex-col" : "flex-row"} flex gap-4`}>
+          {/* Display Ability */}
+          <div className={`${isMobile ? "flex-row" : "flex-col gap-5"} flex`}>
+            <div className="gap-2 flex flex-1 flex-col items-center">
+              {Array.from({ length: 2 }, (_, idx) => (
+                <Skeleton
+                  key={idx}
+                  className="skeleton-background"
+                  h="1.5rem"
+                  w="9rem"
+                  visible={true}
+                />
+              ))}
+            </div>
+            <div className="gap-2 flex flex-1 flex-col items-center">
+              {Array.from({ length: 2 }, (_, idx) => (
+                <Skeleton
+                  key={idx}
+                  className="skeleton-background"
+                  h="1.5rem"
+                  w="9rem"
+                  visible={true}
+                />
               ))}
             </div>
           </div>
-        )}
+          {/* Evolution Chain */}
+          <div className="flex gap-2 items-center">
+            {Array.from({ length: 5 }, (_, idx) =>
+              idx % 2 == 0 ? (
+                <Skeleton
+                  key={idx}
+                  className="skeleton-background"
+                  h="8rem"
+                  w="9rem"
+                  visible={true}
+                />
+              ) : (
+                <Skeleton
+                  key={idx}
+                  className="skeleton-background"
+                  h=".5rem"
+                  w=".5rem"
+                  radius="0"
+                  visible={true}
+                />
+              ),
+            )}
+          </div>
+        </div>
+        {/* Special Info */}
+        <div className="grid grid-cols-3 gap-4 w-full">
+          {Array.from({ length: 9 }, (_, idx) => (
+            <Skeleton
+              key={idx}
+              className="skeleton-background"
+              h="7rem"
+              radius={0}
+              visible={true}
+            />
+          ))}
+        </div>
+        {/* Stats */}
+        <Skeleton className="skeleton-background" w="100%" h="15rem" />
+        {/* Moves */}
+        <div className="flex flex-col items-center gap-4">
+          <Skeleton className="skeleton-background" w="10rem" h="1.5rem" />
+          <div className="flex flex-wrap w-full justify-center gap-4">
+            {Array.from({ length: 12 }, (_, idx) => (
+              <Skeleton
+                key={idx}
+                className="skeleton-background"
+                w="25rem"
+                h="7rem"
+                radius={0}
+                visible={true}
+              />
+            ))}
+          </div>
+        </div>
       </div>
     );
-  };
 
   const DisplayPokemon = () => {
-    if (!pokemonData || !pokemonSpecies) return;
-
     return (
       <div className="flex flex-col items-center gap-4">
         <div className="flex items-center gap-2 ">
@@ -122,6 +200,50 @@ const Page = () => {
             fit="contain"
           />
         </div>
+      </div>
+    );
+  };
+
+  const DisplayAbility = () => {
+    const regularAbilities = pokemonData.abilities.filter(
+      (ability) => ability.is_hidden == false,
+    );
+    const hiddenAbilities = pokemonData.abilities.filter(
+      (ability) => ability.is_hidden == true,
+    );
+
+    return (
+      <div className={`${isMobile ? "flex-row" : "flex-col gap-5"} flex`}>
+        <div className="gap-2 flex flex-1 flex-col items-center">
+          <div>Abilities</div>
+          <div className="flex flex-wrap justify-center gap-2">
+            {regularAbilities.map((pokemonData) => (
+              <Badge
+                key={pokemonData.ability.name}
+                size={`${isMobile ? "sm" : "lg"}`}
+              >
+                {pokemonData.ability.name}
+              </Badge>
+            ))}
+          </div>
+        </div>
+
+        {(hiddenAbilities.length ?? 0) > 0 && (
+          <div className="gap-2 flex flex-1 flex-col items-center">
+            <div>Hidden Ability</div>
+            <div className="flex flex-wrap justify-center gap-2">
+              {hiddenAbilities?.map((pokemonData) => (
+                <Badge
+                  key={pokemonData.ability.name}
+                  color="grape"
+                  size={`${isMobile ? "sm" : "lg"}`}
+                >
+                  {pokemonData.ability.name}
+                </Badge>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     );
   };
@@ -285,7 +407,7 @@ const Page = () => {
     };
 
     return (
-      <div className="flex flex-col gap-2 bg-(--secondary) p-4 rounded-2xl">
+      <Card className="gap-2" c="white" bg="var(--secondary)">
         {pokemonData.stats.map((stat) => {
           const { minHP, maxHP, minStat, maxStat } = minMaxStat(
             stat.base_stat,
@@ -330,7 +452,7 @@ const Page = () => {
             <div>Max</div>
           </div>
         </div>
-      </div>
+      </Card>
     );
   };
 
@@ -364,7 +486,9 @@ const Page = () => {
     return (
       <div className="flex flex-wrap justify-center gap-4">
         <div className="min-w-1/2 max-w-full">
-          <div className="text-center mb-4 font-bold text-lg">LEARNED MOVES</div>
+          <div className="text-center mb-4 font-bold text-lg">
+            LEARNED MOVES
+          </div>
           <div className="flex flex-wrap w-full justify-center gap-4">
             {levelUp.map((move) => (
               <MoveSet
