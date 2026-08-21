@@ -37,7 +37,7 @@ const Page = () => {
   if (isError && error) return <ErrorPage title={error.message} />;
 
   // Page Skeleton
-  if (isLoading || !pokemonData || !pokemonSpecies)
+  if (!isLoading || !pokemonData || !pokemonSpecies)
     return (
       <div
         className={`${isMobile ? "mx-auto w-[90%]" : "px-7 w-full"} flex flex-col gap-8 items-center mx-auto`}
@@ -45,7 +45,7 @@ const Page = () => {
         {/* Display Pokemon */}
         <div className="flex flex-col items-center gap-4">
           <Skeleton
-            className="skeleton-background"
+            className="skeleton-bg"
             h="1.5rem"
             w="10rem"
             visible={true}
@@ -54,7 +54,7 @@ const Page = () => {
             {Array.from({ length: 2 }, (_, idx) => (
               <Skeleton
                 key={idx}
-                className="skeleton-background"
+                className="skeleton-bg"
                 h="1.5rem"
                 w="4rem"
                 visible={true}
@@ -65,7 +65,7 @@ const Page = () => {
             {Array.from({ length: 2 }, (_, idx) => (
               <Skeleton
                 key={idx}
-                className="skeleton-background"
+                className="skeleton-bg"
                 h="10rem"
                 w="10rem"
                 visible={true}
@@ -80,7 +80,7 @@ const Page = () => {
               {Array.from({ length: 2 }, (_, idx) => (
                 <Skeleton
                   key={idx}
-                  className="skeleton-background"
+                  className="skeleton-bg"
                   h="1.5rem"
                   w="9rem"
                   visible={true}
@@ -91,7 +91,7 @@ const Page = () => {
               {Array.from({ length: 2 }, (_, idx) => (
                 <Skeleton
                   key={idx}
-                  className="skeleton-background"
+                  className="skeleton-bg"
                   h="1.5rem"
                   w="9rem"
                   visible={true}
@@ -105,7 +105,7 @@ const Page = () => {
               idx % 2 == 0 ? (
                 <Skeleton
                   key={idx}
-                  className="skeleton-background"
+                  className="skeleton-bg"
                   h="8rem"
                   w="9rem"
                   visible={true}
@@ -113,7 +113,7 @@ const Page = () => {
               ) : (
                 <Skeleton
                   key={idx}
-                  className="skeleton-background"
+                  className="skeleton-bg"
                   h=".5rem"
                   w=".5rem"
                   radius="0"
@@ -128,7 +128,7 @@ const Page = () => {
           {Array.from({ length: 9 }, (_, idx) => (
             <Skeleton
               key={idx}
-              className="skeleton-background"
+              className="skeleton-bg"
               h="7rem"
               radius={0}
               visible={true}
@@ -136,15 +136,15 @@ const Page = () => {
           ))}
         </div>
         {/* Stats */}
-        <Skeleton className="skeleton-background" w="100%" h="15rem" />
+        <Skeleton className="skeleton-bg" w="100%" h="15rem" />
         {/* Moves */}
         <div className="flex flex-col items-center gap-4">
-          <Skeleton className="skeleton-background" w="10rem" h="1.5rem" />
+          <Skeleton className="skeleton-bg" w="10rem" h="1.5rem" />
           <div className="flex flex-wrap w-full justify-center gap-4">
             {Array.from({ length: 12 }, (_, idx) => (
               <Skeleton
                 key={idx}
-                className="skeleton-background"
+                className="skeleton-bg"
                 w="25rem"
                 h="7rem"
                 radius={0}
@@ -302,8 +302,6 @@ const Page = () => {
   };
 
   const SpecialInfo = () => {
-    if (!pokemonSpecies || !pokemonData) return;
-
     const expGrowthMax = {
       "slow-then-very-fast": 600000,
       fast: 800000,
@@ -390,8 +388,6 @@ const Page = () => {
   };
 
   const Stats = () => {
-    if (!pokemonData) return;
-
     const total = pokemonData.stats.reduce(
       (total, current) => total + current.base_stat,
       0,
@@ -457,8 +453,6 @@ const Page = () => {
   };
 
   const Moves = () => {
-    if (!pokemonData) return;
-
     const tm = pokemonData.moves.filter((moveData) =>
       moveData.version_group_details.some(
         (detail) => detail.move_learn_method.name === "machine",
