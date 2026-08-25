@@ -121,8 +121,8 @@ const Pokedex = ({ version, dexKey, entries, victiniClause }: PokedexProps) => {
         }}
       >
         <Image
-          src={`${pokedex.sprite}/${pokemon?.entryNumber}.png`}
-          alt={pokemon?.name}
+          src={`${pokedex.sprite}/${pokemon.entryNumber}.png`}
+          alt={pokemon.name}
           h={isMobile ? "4rem" : "6rem"}
           fit="contain"
         />
