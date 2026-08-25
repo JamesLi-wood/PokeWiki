@@ -46,7 +46,7 @@ const Page = () => {
         <div className="flex flex-col items-center gap-4">
           <Skeleton
             className="skeleton-bg"
-            h="1.5rem"
+            h={isMobile ? "1rem" : "1.5rem"}
             w="10rem"
             visible={true}
           />
@@ -55,7 +55,7 @@ const Page = () => {
               <Skeleton
                 key={idx}
                 className="skeleton-bg"
-                h="1.5rem"
+                h={isMobile ? "1rem" : "1.5rem"}
                 w="4rem"
                 visible={true}
               />
@@ -66,38 +66,36 @@ const Page = () => {
               <Skeleton
                 key={idx}
                 className="skeleton-bg"
-                h="10rem"
-                w="10rem"
+                h={isMobile ? "7rem" : "10rem"}
+                w={isMobile ? "7rem" : "10rem"}
                 visible={true}
               />
             ))}
           </div>
         </div>
-        <div className={`${isMobile ? "flex-col" : "flex-row"} flex gap-4`}>
+        <div
+          className={`${isMobile ? "flex-col" : "flex-row"} flex gap-4 w-full items-center justify-center`}
+        >
           {/* Display Ability */}
-          <div className={`${isMobile ? "flex-row" : "flex-col gap-5"} flex`}>
-            <div className="gap-2 flex flex-1 flex-col items-center">
-              {Array.from({ length: 2 }, (_, idx) => (
-                <Skeleton
-                  key={idx}
-                  className="skeleton-bg"
-                  h="1.5rem"
-                  w="9rem"
-                  visible={true}
-                />
-              ))}
-            </div>
-            <div className="gap-2 flex flex-1 flex-col items-center">
-              {Array.from({ length: 2 }, (_, idx) => (
-                <Skeleton
-                  key={idx}
-                  className="skeleton-bg"
-                  h="1.5rem"
-                  w="9rem"
-                  visible={true}
-                />
-              ))}
-            </div>
+          <div
+            className={`${isMobile ? "flex-row w-full" : "flex-col gap-5"} flex`}
+          >
+            {Array.from({ length: 2 }, (_, idx) => (
+              <div
+                key={idx}
+                className="gap-2 flex flex-1 flex-col items-center"
+              >
+                {Array.from({ length: 2 }, (_, idx) => (
+                  <Skeleton
+                    key={idx}
+                    className="skeleton-bg"
+                    h={isMobile ? "1rem" : "1.5rem"}
+                    w="9rem"
+                    visible={true}
+                  />
+                ))}
+              </div>
+            ))}
           </div>
           {/* Evolution Chain */}
           <div className="flex gap-2 items-center">
@@ -106,8 +104,8 @@ const Page = () => {
                 <Skeleton
                   key={idx}
                   className="skeleton-bg"
-                  h="8rem"
-                  w="9rem"
+                  h={isMobile ? "6rem" : "10rem"}
+                  w={isMobile ? "6rem" : "10rem"}
                   visible={true}
                 />
               ) : (
@@ -138,8 +136,12 @@ const Page = () => {
         {/* Stats */}
         <Skeleton className="skeleton-bg" w="100%" h="15rem" />
         {/* Moves */}
-        <div className="flex flex-col items-center gap-4">
-          <Skeleton className="skeleton-bg" w="10rem" h="1.5rem" />
+        <div className="flex flex-col items-center gap-4 w-full">
+          <Skeleton
+            className="skeleton-bg"
+            w="10rem"
+            h={isMobile ? "1rem" : "1.5rem"}
+          />
           <div className="flex flex-wrap w-full justify-center gap-4">
             {Array.from({ length: 12 }, (_, idx) => (
               <Skeleton
@@ -163,12 +165,12 @@ const Page = () => {
           <div>{`#${pokemonData.id}`}</div>
           <div>{capitalizeFirstLetter(pokemonData.species.name)}</div>
           {pokemonSpecies.is_legendary && (
-            <Badge color="orange" size={`${isMobile ? "sm" : "lg"}`}>
+            <Badge color="orange" size={isMobile ? "sm" : "lg"}>
               Legendary
             </Badge>
           )}
           {pokemonSpecies.is_mythical && (
-            <Badge color="red" size={`${isMobile ? "sm" : "lg"}`}>
+            <Badge color="red" size={isMobile ? "sm" : "lg"}>
               Mythical
             </Badge>
           )}
@@ -188,14 +190,14 @@ const Page = () => {
           <Image
             src={pokemonData.sprites.other.home.front_default}
             alt={pokemonData.species.name}
-            w={`${isMobile ? "7rem" : "10rem"}`}
+            w={isMobile ? "7rem" : "10rem"}
             h="auto"
             fit="contain"
           />
           <Image
             src={pokemonData.sprites.other.home.front_shiny}
             alt={pokemonData.species.name}
-            w={`${isMobile ? "7rem" : "10rem"}`}
+            w={isMobile ? "7rem" : "10rem"}
             h="auto"
             fit="contain"
           />
@@ -220,7 +222,7 @@ const Page = () => {
             {regularAbilities.map((pokemonData) => (
               <Badge
                 key={pokemonData.ability.name}
-                size={`${isMobile ? "sm" : "lg"}`}
+                size={isMobile ? "sm" : "lg"}
               >
                 {pokemonData.ability.name}
               </Badge>
@@ -228,15 +230,15 @@ const Page = () => {
           </div>
         </div>
 
-        {(hiddenAbilities.length ?? 0) > 0 && (
+        {hiddenAbilities.length > 0 && (
           <div className="gap-2 flex flex-1 flex-col items-center">
             <div>Hidden Ability</div>
             <div className="flex flex-wrap justify-center gap-2">
-              {hiddenAbilities?.map((pokemonData) => (
+              {hiddenAbilities.map((pokemonData) => (
                 <Badge
                   key={pokemonData.ability.name}
                   color="grape"
-                  size={`${isMobile ? "sm" : "lg"}`}
+                  size={isMobile ? "sm" : "lg"}
                 >
                   {pokemonData.ability.name}
                 </Badge>
@@ -268,7 +270,7 @@ const Page = () => {
           <Card
             className="cursor-pointer"
             bg="var(--secondary)"
-            w={`${isMobile ? "6rem" : "10rem"}`}
+            w={isMobile ? "6rem" : "10rem"}
             onClick={() => {
               router.push(`/pokemon/${chain.species.name}`);
             }}
@@ -276,7 +278,7 @@ const Page = () => {
             <Image
               src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${id}.png`}
               alt={`${chain.species.name}`}
-              h={`${isMobile ? "4rem" : "7rem"}`}
+              h={isMobile ? "4rem" : "7rem"}
               fit="contain"
             />
           </Card>
