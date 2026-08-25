@@ -69,26 +69,26 @@ const Pokedex = ({ version, dexKey, entries, victiniClause }: PokedexProps) => {
       <Card
         orientation="vertical"
         bg="var(--secondary)"
-        w={`${isMobile ? "10rem" : "13rem"}`}
+        w={isMobile ? "10rem" : "13rem"}
         shadow="sm"
       >
         <Skeleton
           className="skeleton-card-bg"
-          h={`${isMobile ? "4rem" : "6rem"}`}
+          h={isMobile ? "4rem" : "6rem"}
           visible={true}
         />
         <Flex direction="column" align="center" className="mt-2">
           <Flex direction="row" align="center" gap="0.5rem" mb="0.5rem">
             <Skeleton
               className="skeleton-card-bg"
-              h={`${isMobile ? "1rem" : "1.5rem"}`}
-              w={`${isMobile ? "2rem" : "3rem"}`}
+              h={isMobile ? "1rem" : "1.5rem"}
+              w={isMobile ? "2rem" : "3rem"}
               visible={true}
             />
             <Skeleton
               className="skeleton-card-bg"
-              h={`${isMobile ? "1rem" : "1.5rem"}`}
-              w={`${isMobile ? "4rem" : "7rem"}`}
+              h={isMobile ? "1rem" : "1.5rem"}
+              w={isMobile ? "4rem" : "7rem"}
               visible={true}
             />
           </Flex>
@@ -97,7 +97,7 @@ const Pokedex = ({ version, dexKey, entries, victiniClause }: PokedexProps) => {
               <Skeleton
                 key={idx}
                 className="skeleton-card-bg"
-                h={`${isMobile ? "1rem" : "1.5rem"}`}
+                h={isMobile ? "1rem" : "1.5rem"}
                 w="50%"
                 visible={true}
               />
@@ -115,7 +115,7 @@ const Pokedex = ({ version, dexKey, entries, victiniClause }: PokedexProps) => {
         className="cursor-pointer"
         orientation="vertical"
         bg="var(--secondary)"
-        w={`${isMobile ? "10rem" : "13rem"}`}
+        w={isMobile ? "10rem" : "13rem"}
         onClick={() => {
           router.push(`/pokemon/${pokemon.name}`);
         }}
@@ -123,20 +123,20 @@ const Pokedex = ({ version, dexKey, entries, victiniClause }: PokedexProps) => {
         <Image
           src={`${pokedex.sprite}/${pokemon?.entryNumber}.png`}
           alt={pokemon?.name}
-          h={`${isMobile ? "4rem" : "6rem"}`}
+          h={isMobile ? "4rem" : "6rem"}
           fit="contain"
         />
         <Flex direction="column" align="center" className="mt-2">
           <Flex direction="row" align="center" gap="0.5rem" mb="0.5rem">
             <Badge
               variant="outline"
-              size={`${isMobile ? "sm" : "lg"}`}
+              size={isMobile ? "sm" : "lg"}
               color="white"
             >
               {`#${badgeNumber}`}
             </Badge>
             {pokemon && (
-              <Text c="white" size={`${isMobile ? "xs" : "md"}`}>
+              <Text c="white" size={isMobile ? "xs" : "md"}>
                 {capitalizeFirstLetter(pokemon.name)}
               </Text>
             )}
@@ -186,7 +186,7 @@ const Pokedex = ({ version, dexKey, entries, victiniClause }: PokedexProps) => {
   return (
     <div ref={targetRef} className="flex justify-center flex-wrap gap-3 m-5">
       {isLoading || !pokemons ? (
-        Array.from({ length: 49 }, (_, idx) => {
+        Array.from({ length: BATCH }, (_, idx) => {
           return <SkeletonPokemonCard key={idx} />;
         })
       ) : (

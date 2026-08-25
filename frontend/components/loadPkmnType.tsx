@@ -10,7 +10,7 @@ const LoadPkmnType = ({
   return (
     <Badge
       style={{ backgroundColor: `var(--${type})` }}
-      size={`${isMobile ? "xs" : "md"}`}
+      size={isMobile ? "xs" : "md"}
     >
       {type}
     </Badge>
