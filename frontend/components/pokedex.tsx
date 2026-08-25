@@ -135,11 +135,9 @@ const Pokedex = ({ version, dexKey, entries, victiniClause }: PokedexProps) => {
             >
               {`#${badgeNumber}`}
             </Badge>
-            {pokemon && (
-              <Text c="white" size={isMobile ? "xs" : "md"}>
-                {capitalizeFirstLetter(pokemon.name)}
-              </Text>
-            )}
+            <Text c="white" size={isMobile ? "xs" : "md"}>
+              {capitalizeFirstLetter(pokemon.name)}
+            </Text>
           </Flex>
           <div className="flex gap-2">
             {(() => {
