@@ -257,7 +257,7 @@ const Page = () => {
 
     if (chain.species.name == "eevee")
       return (
-        <div className="grid-container gap-4">
+        <div className="evo-chain-template gap-4">
           {chain.evolves_to.map((child, idx) => {
             const id = child.species.url.split("/").filter(Boolean).pop();
             return (
