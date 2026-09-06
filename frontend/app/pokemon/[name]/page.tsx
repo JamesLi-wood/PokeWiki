@@ -256,7 +256,46 @@ const Page = () => {
       return;
 
     if (chain.species.name == "eevee")
-      return <div>{/* Special one for eevee where it wraps around */}</div>;
+      return (
+        <div className="grid-container gap-4">
+          {chain.evolves_to.map((child, idx) => {
+            const id = child.species.url.split("/").filter(Boolean).pop();
+            return (
+              <Card
+                key={child.species.name}
+                className={`area${idx} cursor-pointer`}
+                bg="var(--secondary)"
+                w={isMobile ? "6rem" : "10rem"}
+                onClick={() => {
+                  router.push(`/pokemon/${child.species.name}`);
+                }}
+              >
+                <Image
+                  src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${id}.png`}
+                  alt={`${child.species.name}`}
+                  h={isMobile ? "4rem" : "7rem"}
+                  fit="contain"
+                />
+              </Card>
+            );
+          })}
+          <Card
+            className="area8 cursor-pointer border-2 border-green-500"
+            bg="var(--secondary)"
+            w={isMobile ? "6rem" : "10rem"}
+            onClick={() => {
+              router.push(`/pokemon/${chain.species.name}`);
+            }}
+          >
+            <Image
+              src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/133.png`}
+              alt={`${chain.species.name}`}
+              h={isMobile ? "4rem" : "7rem"}
+              fit="contain"
+            />
+          </Card>
+        </div>
+      );
 
     const upToDateEvolution = chain.evolution_details.filter((key) => {
       return key.is_default == true;
