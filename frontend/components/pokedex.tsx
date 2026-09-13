@@ -211,6 +211,7 @@ const Pokedex = ({ version, dexKey, entries, victiniClause }: PokedexProps) => {
             })}
           </div>
           <Pagination
+            size={isMobile ? "sm" : "md"}
             total={Math.ceil(entries.length / BATCH)}
             value={page + 1}
             onChange={(val) => {
