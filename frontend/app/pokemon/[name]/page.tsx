@@ -13,7 +13,6 @@ import useGetPokemon from "@/hooks/useGetPokemon";
 import MoveSet from "@/components/moveSet";
 import LoadPkmnType from "@/components/loadPkmnType";
 import ErrorPage from "@/components/errorPage";
-import capitalizeFirstLetter from "@/utils/capitalizeFirstLetter";
 import minMaxStat from "@/utils/minMaxStat";
 import { Chain } from "@/types/evolutionChain";
 
@@ -163,7 +162,7 @@ const Page = () => {
       <div className="flex flex-col items-center gap-4">
         <div className="flex items-center gap-2 ">
           <div>{`#${pokemonData.id}`}</div>
-          <div>{capitalizeFirstLetter(pokemonData.species.name)}</div>
+          <div className="capitalize">{pokemonData.species.name}</div>
           {pokemonSpecies.is_legendary && (
             <Badge color="orange" size={isMobile ? "sm" : "lg"}>
               Legendary
@@ -459,7 +458,7 @@ const Page = () => {
               <div
                 className={`${isMobile ? "w-32" : "w-48"} flex justify-between`}
               >
-                <div>{capitalizeFirstLetter(stat.stat.name)}</div>
+                <div className="capitalize">{stat.stat.name}</div>
                 <div>{stat.base_stat}</div>
               </div>
               <Progress

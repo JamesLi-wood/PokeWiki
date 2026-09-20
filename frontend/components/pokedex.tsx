@@ -13,7 +13,6 @@ import {
 } from "@mantine/core";
 import { useMediaQuery, useScrollIntoView } from "@mantine/hooks";
 import LoadPkmnType from "./loadPkmnType";
-import capitalizeFirstLetter from "@/utils/capitalizeFirstLetter";
 import gameVersion from "@/utils/gameVersion";
 
 type PokedexProps = {
@@ -135,8 +134,8 @@ const Pokedex = ({ version, dexKey, entries, victiniClause }: PokedexProps) => {
             >
               {`#${badgeNumber}`}
             </Badge>
-            <Text c="white" size={isMobile ? "xs" : "md"}>
-              {capitalizeFirstLetter(pokemon.name)}
+            <Text className="capitalize" c="white" size={isMobile ? "xs" : "md"}>
+              {pokemon.name}
             </Text>
           </Flex>
           <div className="flex gap-2">

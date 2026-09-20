@@ -2,7 +2,6 @@ import { Card, Image } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import useGetMove from "@/hooks/useGetMove";
 import LoadPkmnType from "./loadPkmnType";
-import capitalizeFirstLetter from "@/utils/capitalizeFirstLetter";
 import { GiBroadsword, GiHeavyArrow } from "react-icons/gi";
 import { GoHorizontalRule } from "react-icons/go";
 import { PokemonData } from "@/types/pokemonData";
@@ -31,9 +30,7 @@ const MoveSet = ({ moveSet, condition }: Props) => {
       w="25rem"
     >
       <div className="flex gap-4 items-center">
-        <div className="w-[70%] font-bold text-lg">
-          {capitalizeFirstLetter(move.name)}
-        </div>
+        <div className="w-[70%] text-lg capitalize">{move.name}</div>
         <div className="flex flex-col gap-2 w-auto">
           <LoadPkmnType type={move.type.name} isMobile={isMobile} />
           <Image

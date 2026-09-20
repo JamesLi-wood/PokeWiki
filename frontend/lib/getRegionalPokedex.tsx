@@ -1,5 +1,3 @@
-import capitalizeFirstLetter from "@/utils/capitalizeFirstLetter";
-
 type pkmnData = {
   entry_number: number;
   pokemon_species: {
@@ -26,7 +24,7 @@ export const regionalPokedex = async (pokedexes: string[]) => {
       });
 
       return {
-        title: capitalizeFirstLetter(`${data.name} Pokedex`),
+        title: data.name,
         entries: pokemonEntries,
       };
     }),

@@ -78,7 +78,7 @@ const Page = () => {
           <>
             {regDex?.map((dex) => (
               <div key={dex.title}>
-                <div className="font-bold">{dex.title}</div>
+                <div className="font-bold capitalize">{`${dex.title} Pokedex`}</div>
                 <Pokedex
                   version={version}
                   dexKey={dex.title}
