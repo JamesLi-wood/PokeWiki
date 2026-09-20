@@ -3,10 +3,6 @@ type entries = {
   url: string;
 };
 
-/* 
-  entries.name will not be used due to some varients
-  having different names ex: rotom-wash
-*/
 export const getPokemonBatch = async (
   page: number,
   entries: entries[],
