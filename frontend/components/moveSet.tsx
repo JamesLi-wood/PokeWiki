@@ -1,4 +1,4 @@
-import { Card, Image } from "@mantine/core";
+import { Card, Image, Text } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import useGetMove from "@/hooks/useGetMove";
 import LoadPkmnType from "./loadPkmnType";
@@ -30,7 +30,13 @@ const MoveSet = ({ moveSet, condition }: Props) => {
       w="25rem"
     >
       <div className="flex gap-4 items-center">
-        <div className="w-[70%] text-lg capitalize">{move.name}</div>
+        <Text
+          className="capitalize w-[70%]"
+          fw="bold"
+          size={isMobile ? "sm" : "md"}
+        >
+          {move.name}
+        </Text>
         <div className="flex flex-col gap-2 w-auto">
           <LoadPkmnType type={move.type.name} isMobile={isMobile} />
           <Image
@@ -44,17 +50,17 @@ const MoveSet = ({ moveSet, condition }: Props) => {
       </div>
       <div className="flex justify-center items-center gap-10 h-10">
         {condition == "level-up" && (
-          <div>{`Lv ${moveSet.version_group_details[0].level_learned_at}`}</div>
+          <Text>{`Lv ${moveSet.version_group_details[0].level_learned_at}`}</Text>
         )}
         <div className="flex items-center gap-2">
           <GiBroadsword />
-          <div>{move.power == null ? <GoHorizontalRule /> : move.power}</div>
+          <Text>{move.power == null ? <GoHorizontalRule /> : move.power}</Text>
         </div>
         <div className="flex items-center gap-2">
           <GiHeavyArrow />
-          <div>
+          <Text>
             {move.accuracy == null ? <GoHorizontalRule /> : move.accuracy}
-          </div>
+          </Text>
         </div>
       </div>
     </Card>
