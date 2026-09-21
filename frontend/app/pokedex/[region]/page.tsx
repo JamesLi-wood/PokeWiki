@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useMediaQuery, useDisclosure } from "@mantine/hooks";
-import { Drawer, SegmentedControl, Button } from "@mantine/core";
+import { Drawer, SegmentedControl, Button, Text } from "@mantine/core";
 import Pokedex from "@/components/pokedex";
 import ErrorPage from "@/components/errorPage";
 import usePokedex from "@/hooks/usePokedex";
@@ -37,17 +37,25 @@ const Page = () => {
   return (
     <div className="flex flex-col items-center mt-5 gap-4">
       <div>
-        <Drawer opened={opened} onClose={close} title="Other Games">
+        <Drawer
+          opened={opened}
+          onClose={close}
+          title="Other Games"
+          size={isMobile ? "70%" : "md"}
+        >
           {gameTitles.map((game) => (
-            <div
+            <Text
               key={game.key}
-              className={`${slug == game.key && "bg-(--secondary)"} hover:bg-(--secondary) p-2 my-2 cursor-pointer`}
+              className={`${slug == game.key && "bg-(--secondary)"} hover:bg-(--secondary) cursor-pointer`}
+              p="0.5rem"
+              my="0.5rem"
+              size={isMobile ? "xs" : "md"}
               onClick={() => {
                 router.push(`/pokedex/${game.key}`);
               }}
             >
               {game.title}
-            </div>
+            </Text>
           ))}
         </Drawer>
         <Button
@@ -78,7 +86,10 @@ const Page = () => {
           <>
             {regDex?.map((dex) => (
               <div key={dex.title}>
-                <div className="font-bold capitalize">{`${dex.title} Pokedex`}</div>
+                <Text
+                  className="capitalize"
+                  fw="bold"
+                >{`${dex.title} Pokedex`}</Text>
                 <Pokedex
                   version={version}
                   dexKey={dex.title}
@@ -90,7 +101,9 @@ const Page = () => {
           </>
         ) : (
           <>
-            <div className="font-bold">{natDex.title}</div>
+            <Text className="capitalize" fw="bold">
+              {natDex.title}
+            </Text>
             <Pokedex
               version={version}
               dexKey={natDex.title}
