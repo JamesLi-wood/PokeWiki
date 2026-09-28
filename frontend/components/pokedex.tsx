@@ -185,7 +185,14 @@ const Pokedex = ({ version, dexKey, entries, victiniClause }: PokedexProps) => {
   };
 
   return (
-    <Flex ref={targetRef} direction="column" align="center" m="1rem">
+    <Flex
+      ref={targetRef}
+      direction="row"
+      justify="center"
+      wrap="wrap"
+      gap="1rem"
+      m="1rem"
+    >
       {isLoading || !pokemons ? (
         Array.from({ length: BATCH }, (_, idx) => {
           return <SkeletonPokemonCard key={idx} />;
