@@ -134,11 +134,15 @@ const Pokedex = ({ version, dexKey, entries, victiniClause }: PokedexProps) => {
             >
               {`#${badgeNumber}`}
             </Badge>
-            <Text className="capitalize" c="white" size={isMobile ? "xs" : "md"}>
+            <Text
+              className="capitalize"
+              c="white"
+              size={isMobile ? "xs" : "md"}
+            >
               {pokemon.name}
             </Text>
           </Flex>
-          <div className="flex gap-2">
+          <Flex direction="row" gap="0.5rem">
             {(() => {
               switch (version) {
                 case "rs":
@@ -174,21 +178,27 @@ const Pokedex = ({ version, dexKey, entries, victiniClause }: PokedexProps) => {
                   ));
               }
             })()}
-          </div>
+          </Flex>
         </Flex>
       </Card>
     );
   };
 
   return (
-    <div ref={targetRef} className="flex justify-center flex-wrap gap-3 m-5">
+    <Flex ref={targetRef} direction="column" align="center" m="1rem">
       {isLoading || !pokemons ? (
         Array.from({ length: BATCH }, (_, idx) => {
           return <SkeletonPokemonCard key={idx} />;
         })
       ) : (
-        <div className="flex flex-col items-center">
-          <div className="flex justify-center flex-wrap gap-3 mb-5">
+        <>
+          <Flex
+            direction="row"
+            justify="center"
+            wrap="wrap"
+            gap="1rem"
+            mb="1.5rem"
+          >
             {pokemons.map((pokemon, idx) => {
               return (
                 <Transition
@@ -208,7 +218,7 @@ const Pokedex = ({ version, dexKey, entries, victiniClause }: PokedexProps) => {
                 </Transition>
               );
             })}
-          </div>
+          </Flex>
           <Pagination
             size={isMobile ? "sm" : "md"}
             total={Math.ceil(entries.length / BATCH)}
@@ -220,9 +230,9 @@ const Pokedex = ({ version, dexKey, entries, victiniClause }: PokedexProps) => {
               });
             }}
           />
-        </div>
+        </>
       )}
-    </div>
+    </Flex>
   );
 };
 

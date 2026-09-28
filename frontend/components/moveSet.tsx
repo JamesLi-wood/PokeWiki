@@ -1,4 +1,4 @@
-import { Card, Image, Text } from "@mantine/core";
+import { Card, Image, Text, Flex } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import useGetMove from "@/hooks/useGetMove";
 import LoadPkmnType from "./loadPkmnType";
@@ -29,7 +29,7 @@ const MoveSet = ({ moveSet, condition }: Props) => {
       maw="100%"
       w="25rem"
     >
-      <div className="flex gap-4 items-center">
+      <Flex direction="row" gap="1rem" align="center">
         <Text
           className="capitalize w-[70%]"
           fw="bold"
@@ -37,7 +37,7 @@ const MoveSet = ({ moveSet, condition }: Props) => {
         >
           {move.name}
         </Text>
-        <div className="flex flex-col gap-2 w-auto">
+        <Flex direction="column" gap="0.5rem">
           <LoadPkmnType type={move.type.name} isMobile={isMobile} />
           <Image
             src={`/${move.damage_class.name}.png`}
@@ -46,23 +46,31 @@ const MoveSet = ({ moveSet, condition }: Props) => {
             h="auto"
             fit="contain"
           />
-        </div>
-      </div>
-      <div className="flex justify-center items-center gap-10 h-10">
+        </Flex>
+      </Flex>
+      <Flex
+        direction="row"
+        justify="center"
+        align="center"
+        gap="2.5rem"
+        h="2.5rem"
+      >
         {condition == "level-up" && (
-          <Text>{`Lv ${moveSet.version_group_details[0].level_learned_at}`}</Text>
+          <Text size="md">{`Lv ${moveSet.version_group_details[0].level_learned_at}`}</Text>
         )}
-        <div className="flex items-center gap-2">
+        <Flex direction="row" align="center" gap="0.5rem">
           <GiBroadsword />
-          <Text>{move.power == null ? <GoHorizontalRule /> : move.power}</Text>
-        </div>
-        <div className="flex items-center gap-2">
+          <Text size="md">
+            {move.power == null ? <GoHorizontalRule /> : move.power}
+          </Text>
+        </Flex>
+        <Flex direction="row" align="center" gap="0.5rem">
           <GiHeavyArrow />
-          <Text>
+          <Text size="md">
             {move.accuracy == null ? <GoHorizontalRule /> : move.accuracy}
           </Text>
-        </div>
-      </div>
+        </Flex>
+      </Flex>
     </Card>
   );
 };

@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useMediaQuery, useDisclosure } from "@mantine/hooks";
-import { Drawer, SegmentedControl, Button, Text } from "@mantine/core";
+import { Drawer, SegmentedControl, Button, Text, Flex } from "@mantine/core";
 import Pokedex from "@/components/pokedex";
 import ErrorPage from "@/components/errorPage";
 import usePokedex from "@/hooks/usePokedex";
@@ -35,7 +35,7 @@ const Page = () => {
   };
 
   return (
-    <div className="flex flex-col items-center mt-5 gap-4">
+    <Flex direction="column" align="center" mt="1.5rem" gap="1rem">
       <div>
         <Drawer
           opened={opened}
@@ -113,7 +113,7 @@ const Page = () => {
           </>
         )}
       </div>
-    </div>
+    </Flex>
   );
 };
 
