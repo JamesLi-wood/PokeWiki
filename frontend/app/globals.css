@@ -11,6 +11,13 @@ body,
   color: white;
 }
 
+.reveal {
+  border-color: red;
+}
+.correct {
+  border-color: green;
+}
+
 /* Mantine Skeleton Component */
 .skeleton-card-bg::before {
   background: linear-gradient(90deg, inherit, var(--secondary), inherit);
@@ -64,7 +71,7 @@ body,
 .mantine-Autocomplete-dropdown {
   background-color: var(--secondary);
   text-transform: capitalize;
-  border: none
+  border: none;
 }
 .mantine-Autocomplete-option:hover {
   color: black;
