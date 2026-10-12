@@ -33,20 +33,36 @@ const Page = () => {
 
   const Selecting = () => {
     return (
-      <div>
-        {gameRegions.map((region) => (
-          <Checkbox.Card
-            key={region}
-            onChange={(event) => {
-              regionsClone[region].selected = event;
-            }}
-          >
-            <Flex direction="row">
-              <Checkbox.Indicator />
-              <Text>{region}</Text>
-            </Flex>
-          </Checkbox.Card>
-        ))}
+      <Flex
+        direction="column"
+        align="center"
+        bg="var(--secondary)"
+        gap="1rem"
+        m="auto"
+        p="1rem"
+        w="auto"
+        maw="80%"
+      >
+        <Text fw="bold">Select Regions</Text>
+        <div className="grid grid-cols-3 gap-4">
+          {gameRegions.map((region) => (
+            <Checkbox.Card
+              w="10rem"
+              maw="100%"
+              key={region}
+              onChange={(event) => {
+                regionsClone[region].selected = event;
+              }}
+            >
+              <Flex direction="row" align="center" gap="0.5rem" p="0.5rem">
+                <Checkbox.Indicator radius="xl" />
+                <Text size={isMobile ? "xs" : "md"} className="capitalize">
+                  {region}
+                </Text>
+              </Flex>
+            </Checkbox.Card>
+          ))}
+        </div>
         <Button
           onClick={() => {
             const selectedRegions = Object.entries(regionsClone)
@@ -70,22 +86,22 @@ const Page = () => {
         >
           Submit
         </Button>
-      </div>
+      </Flex>
     );
   };
 
   const Guessing = () => {
-    const imageRefs = useRef<Record<string, HTMLImageElement | null>>({});
-    const length = guessingRegions.reduce(
-      (sum, region) => sum + region.amount,
-      0,
-    );
     const { data: natDex } = useQuery({
       queryKey: ["natDex"],
       queryFn: () => nationalPokedex(),
       staleTime: Infinity,
     });
+    const imageRefs = useRef<Record<string, HTMLImageElement | null>>({});
     const [count, handlers] = useCounter(0);
+    const length = guessingRegions.reduce(
+      (sum, region) => sum + region.amount,
+      0,
+    );
 
     const findName = (e: React.ChangeEvent<HTMLInputElement>) => {
       const name = e.target.value.toLowerCase();
