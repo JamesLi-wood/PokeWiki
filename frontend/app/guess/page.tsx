@@ -1,5 +1,5 @@
 "use client";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { nationalPokedex } from "@/lib/getNationalPokedex";
 import {
@@ -11,8 +11,10 @@ import {
   Image,
   TextInput,
   Tooltip,
+  Modal,
+  RingProgress,
 } from "@mantine/core";
-import { useCounter, useMediaQuery } from "@mantine/hooks";
+import { useCounter, useMediaQuery, useDisclosure } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
 import regions from "@/utils/regions";
 
@@ -97,11 +99,17 @@ const Page = () => {
       staleTime: Infinity,
     });
     const imageRefs = useRef<Record<string, HTMLImageElement | null>>({});
-    const [count, handlers] = useCounter(0);
+    const [opened, { open, close }] = useDisclosure(false);
+    const [count, countHandler] = useCounter(0);
+    const [revealed, revealHandler] = useCounter(0);
     const length = guessingRegions.reduce(
       (sum, region) => sum + region.amount,
       0,
     );
+
+    useEffect(() => {
+      if (count == length) open();
+    }, [count]);
 
     const findName = (e: React.ChangeEvent<HTMLInputElement>) => {
       const name = e.target.value.toLowerCase();
@@ -111,7 +119,7 @@ const Page = () => {
         image.src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${image.dataset.id}.png`;
         const card = image.parentElement;
         if (card) card.classList.toggle("correct");
-        handlers.increment();
+        countHandler.increment();
         e.target.value = "";
       }
     };
@@ -123,7 +131,8 @@ const Page = () => {
         image.src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${image.dataset.id}.png`;
         const card = image.parentElement;
         if (card) card.classList.toggle("reveal");
-        handlers.increment();
+        countHandler.increment();
+        revealHandler.increment();
       }
     };
 
@@ -137,13 +146,53 @@ const Page = () => {
           imgRef.src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${imgRef.dataset.id}.png`;
           const card = imgRef.parentElement;
           if (card) card.classList.toggle("reveal");
-          handlers.set(length);
         }
       });
+      revealHandler.set(revealed + length - count);
+      countHandler.set(length);
     };
 
     return (
       <Flex direction={isMobile ? "column-reverse" : "row"}>
+        <Modal
+          opened={opened}
+          onClose={close}
+          title="Results"
+          c="black"
+          centered
+        >
+          <Flex direction="column" align="center">
+            <Flex direction="row" justify="space-around" w="100%">
+              <Text>{`${revealed} Revealed`}</Text>
+              <Text>{`${length - revealed} Guessed`}</Text>
+            </Flex>
+            <RingProgress
+              label={
+                <Text ta="center">
+                  {Math.floor(((length - revealed) / length) * 100)}%
+                </Text>
+              }
+              size={150}
+              sections={[
+                {
+                  value: (revealed / length) * 100,
+                  color: "red",
+                },
+                {
+                  value: ((length - revealed) / length) * 100,
+                  color: "green",
+                },
+              ]}
+            />
+            <Button
+              onClick={() => {
+                setGamestate("select");
+              }}
+            >
+              Play Again
+            </Button>
+          </Flex>
+        </Modal>
         <Flex
           direction="column"
           className={`${isMobile ? "bottom-0" : "top-0"} sticky z-10`}
@@ -165,7 +214,6 @@ const Page = () => {
             Reveal All
           </Button>
         </Flex>
-
         <Flex direction="column" p="2rem" gap="3rem">
           {guessingRegions.map((region) => (
             <div key={region.name}>
