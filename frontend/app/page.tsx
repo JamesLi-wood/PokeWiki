@@ -1,65 +1,108 @@
-import Image from "next/image";
+"use client";
+import { useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import { Autocomplete, Text, Image, Card, Flex, Button } from "@mantine/core";
+import { useMediaQuery } from "@mantine/hooks";
+import { nationalPokedex } from "@/lib/getNationalPokedex";
+import gameVersion from "@/utils/gameVersion";
 
-export default function Home() {
+const Page = () => {
+  const { data: natDex } = useQuery({
+    queryKey: ["natDex"],
+    queryFn: () => nationalPokedex(),
+    staleTime: Infinity,
+  });
+  const router = useRouter();
+  const isMobile = useMediaQuery("(max-width: 768px)");
+  const gameTitles = Object.entries(gameVersion).map(([key, game]) => ({
+    key,
+    data: game,
+  }));
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <Flex direction="column" mx="auto" w="80%" py="1rem" gap="1rem">
+      <Flex
+        direction={isMobile ? "column" : "row"}
+        align={isMobile ? "center" : ""}
+        justify="center"
+        gap="1rem"
+      >
+        <Text
+          c="white"
+          maw="80%"
+          w={isMobile ? "15rem" : "21rem"}
+          size={isMobile ? "xs" : "md"}
+        >
+          With 1000+ pokémon out there, finding the one you're looking for can
+          be quite a challenge! Don't worry, just start typing and you'll track
+          down your pokémon in no time!
+        </Text>
+        <Autocomplete
+          label="Find your pokémon"
+          placeholder="Type a pokémon"
+          data={natDex?.entries.map(
+            (data: { name: string; url: string }) => data.name,
+          )}
+          onOptionSubmit={(name) => {
+            router.push(`/pokemon/${name}`);
+          }}
+          maw="80%"
+          w="20rem"
+          limit={5}
+          size={isMobile ? "xs" : "sm"}
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+      </Flex>
+      <Text className="text-center" size={isMobile ? "md" : "lg"} fw="bold">
+        Search Pokedexes
+      </Text>
+      <Flex direction="row" justify="center" wrap="wrap" gap="2rem">
+        {gameTitles.map((game) => (
+          <Card
+            key={game.key}
+            orientation="vertical"
+            className="items-center"
+            bg="var(--secondary)"
+            p={0}
+            w={isMobile ? "15rem" : "20rem"}
           >
             <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+              fit="contain"
+              src={game.data.banner}
+              h={isMobile ? 140 : 190}
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+            <Flex
+              direction="column"
+              c="white"
+              align="center"
+              justify="center"
+              px="0.5rem"
+              py="1rem"
+              gap="0.5rem"
+            >
+              <Text fw="bold" size={isMobile ? "sm" : "md"}>
+                {game.data.title}
+              </Text>
+              <Text className="text-center" size={isMobile ? "xs" : "md"}>
+                {game.data.summary}
+              </Text>
+            </Flex>
+            <Button
+              variant="outline"
+              color="white"
+              size={isMobile ? "xs" : "sm"}
+              w="50%"
+              mb="1rem"
+              onClick={() => {
+                router.push(`pokedex/${game.key}`);
+              }}
+            >
+              View Pokedex
+            </Button>
+          </Card>
+        ))}
+      </Flex>
+    </Flex>
   );
-}
+};
+
+export default Page;
