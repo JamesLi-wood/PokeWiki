@@ -120,7 +120,7 @@ const Pokedex = ({ version, dexKey, entries, victiniClause }: PokedexProps) => {
         }}
       >
         <Image
-          src={`${pokedex.sprite}/${pokemon.entryNumber}.png`}
+          src={`${pokedex.sprite}/${pokemon.entryNumber}.${pokedex.imageType}`}
           alt={pokemon.name}
           h={isMobile ? "4rem" : "6rem"}
           fit="contain"
@@ -145,6 +145,10 @@ const Pokedex = ({ version, dexKey, entries, victiniClause }: PokedexProps) => {
           <Flex direction="row" gap="0.5rem">
             {(() => {
               switch (version) {
+                case "rb":
+                case "yellow":
+                case "gs":
+                case "crystal":
                 case "rs":
                 case "frlg":
                 case "emerald":
@@ -187,25 +191,19 @@ const Pokedex = ({ version, dexKey, entries, victiniClause }: PokedexProps) => {
   return (
     <Flex
       ref={targetRef}
-      direction="row"
-      justify="center"
+      direction="column"
+      align="center"
       wrap="wrap"
       gap="1rem"
       m="1rem"
     >
-      {isLoading || !pokemons ? (
-        Array.from({ length: BATCH }, (_, idx) => {
-          return <SkeletonPokemonCard key={idx} />;
-        })
-      ) : (
-        <>
-          <Flex
-            direction="row"
-            justify="center"
-            wrap="wrap"
-            gap="1rem"
-            mb="1.5rem"
-          >
+      <Flex direction="row" justify="center" wrap="wrap" gap="1rem" mb="1.5rem">
+        {isLoading || !pokemons ? (
+          Array.from({ length: BATCH }, (_, idx) => {
+            return <SkeletonPokemonCard key={idx} />;
+          })
+        ) : (
+          <>
             {pokemons.map((pokemon, idx) => {
               return (
                 <Transition
@@ -225,8 +223,18 @@ const Pokedex = ({ version, dexKey, entries, victiniClause }: PokedexProps) => {
                 </Transition>
               );
             })}
-          </Flex>
+          </>
+        )}
+      </Flex>
+      <Transition
+        mounted={transition}
+        transition="fade"
+        duration={100}
+        enterDelay={500}
+      >
+        {(styles) => (
           <Pagination
+            style={styles}
             size={isMobile ? "sm" : "md"}
             total={Math.ceil(entries.length / BATCH)}
             value={page + 1}
@@ -237,8 +245,8 @@ const Pokedex = ({ version, dexKey, entries, victiniClause }: PokedexProps) => {
               });
             }}
           />
-        </>
-      )}
+        )}
+      </Transition>
     </Flex>
   );
 };
