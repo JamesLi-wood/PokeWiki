@@ -52,7 +52,7 @@ const Page = () => {
           size={isMobile ? "xs" : "sm"}
         />
       </Flex>
-      <Text className="text-center" size={isMobile ? "md" : "lg"} fw="bold">
+      <Text size={isMobile ? "md" : "lg"} ta="center" fw="bold">
         Search Pokedexes
       </Text>
       <Flex direction="row" justify="center" wrap="wrap" gap="2rem">
@@ -73,18 +73,15 @@ const Page = () => {
             <Flex
               direction="column"
               c="white"
-              align="center"
-              justify="center"
               px="0.5rem"
               py="1rem"
               gap="0.5rem"
+              ta="center"
             >
-              <Text fw="bold" size={isMobile ? "sm" : "md"}>
+              <Text size={isMobile ? "sm" : "md"} fw="bold">
                 {game.data.title}
               </Text>
-              <Text className="text-center" size={isMobile ? "xs" : "md"}>
-                {game.data.summary}
-              </Text>
+              <Text size={isMobile ? "xs" : "md"}>{game.data.summary}</Text>
             </Flex>
             <Button
               variant="outline"
