@@ -23,6 +23,7 @@ type PokedexProps = {
     url: string;
   }[];
   victiniClause: boolean;
+  animateSprite: boolean;
 };
 
 type TypeProps = {
@@ -41,7 +42,13 @@ type PokemonCardProps = {
   style: React.CSSProperties;
 };
 
-const Pokedex = ({ version, dexKey, entries, victiniClause }: PokedexProps) => {
+const Pokedex = ({
+  version,
+  dexKey,
+  entries,
+  victiniClause,
+  animateSprite,
+}: PokedexProps) => {
   const pokedex = gameVersion[version];
   const { pokemons, isLoading, page, paginate, BATCH } = useLoadPokemon(
     dexKey,
@@ -108,6 +115,10 @@ const Pokedex = ({ version, dexKey, entries, victiniClause }: PokedexProps) => {
   };
 
   const PokemonCard = ({ pokemon, badgeNumber, style }: PokemonCardProps) => {
+    const imgSrc = animateSprite
+      ? `${pokedex.animatedSprite}/${pokemon.entryNumber}.${pokedex.animatedFileType}`
+      : `${pokedex.sprite}/${pokemon.entryNumber}.png`;
+
     return (
       <Card
         style={style}
@@ -120,7 +131,7 @@ const Pokedex = ({ version, dexKey, entries, victiniClause }: PokedexProps) => {
         }}
       >
         <Image
-          src={`${pokedex.sprite}/${pokemon.entryNumber}.${pokedex.imageType}`}
+          src={imgSrc}
           alt={pokemon.name}
           h={isMobile ? "4rem" : "6rem"}
           fit="contain"

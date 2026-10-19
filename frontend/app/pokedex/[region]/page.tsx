@@ -1,8 +1,15 @@
 "use client";
-import { useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useMediaQuery, useDisclosure } from "@mantine/hooks";
-import { Drawer, SegmentedControl, Button, Text, Flex } from "@mantine/core";
+import {
+  Drawer,
+  SegmentedControl,
+  Button,
+  Text,
+  Flex,
+  Switch,
+} from "@mantine/core";
 import Pokedex from "@/components/pokedex";
 import ErrorPage from "@/components/errorPage";
 import usePokedex from "@/hooks/usePokedex";
@@ -29,6 +36,15 @@ const Page = () => {
   const [dexVersion, setDexVersion] = useState<dexVersion>("regional");
   const isMobile = useMediaQuery("(max-width: 768px)");
   const router = useRouter();
+  const [animateSprite, setAnimateSprite] = useState(false);
+
+  useEffect(() => {
+    if (gameVersion[version].sprite !== null) {
+      setAnimateSprite(false);
+    } else {
+      setAnimateSprite(true);
+    }
+  }, []);
 
   const switchDex = () => {
     setDexVersion((prev) => (prev === "regional" ? "national" : "regional"));
@@ -58,15 +74,27 @@ const Page = () => {
             </Text>
           ))}
         </Drawer>
-        <Button
-          variant="default"
-          bg="var(--secondary)"
-          c="white"
-          bd="none"
-          onClick={open}
-        >
-          View Other Games
-        </Button>
+        <Flex direction="row" align="center" gap="1rem">
+          <Button
+            variant="default"
+            bg="var(--secondary)"
+            c="white"
+            bd="none"
+            onClick={open}
+          >
+            View Other Games
+          </Button>
+          <Switch
+            label="Animate Sprite"
+            withThumbIndicator={false}
+            checked={animateSprite}
+            onChange={(event) => setAnimateSprite(event.currentTarget.checked)}
+            disabled={
+              gameVersion[version].sprite == null ||
+              gameVersion[version].animatedSprite == null
+            }
+          />
+        </Flex>
       </div>
       <SegmentedControl
         bg="var(--secondary)"
@@ -95,6 +123,7 @@ const Page = () => {
                   dexKey={dex.title}
                   entries={dex.entries}
                   victiniClause={victiniClause}
+                  animateSprite={animateSprite}
                 />
               </div>
             ))}
@@ -109,6 +138,7 @@ const Page = () => {
               dexKey={natDex.title}
               entries={natDex.entries}
               victiniClause={false}
+              animateSprite={animateSprite}
             />
           </>
         )}
