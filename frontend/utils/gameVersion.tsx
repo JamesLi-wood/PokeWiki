@@ -6,7 +6,8 @@ const gameVersion = {
     regionalDex: ["https://pokeapi.co/api/v2/pokedex/2/"],
     sprite:
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-i/red-blue/transparent",
-    imageType: "png",
+    animatedSprite: null,
+    animatedFileType: null,
     banner: "banners/rb.jpg",
     limit: 151,
   },
@@ -17,7 +18,8 @@ const gameVersion = {
     regionalDex: ["https://pokeapi.co/api/v2/pokedex/2/"],
     sprite:
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-i/yellow/transparent",
-    imageType: "png",
+    animatedSprite: null,
+    animatedFileType: null,
     banner: "banners/yellow.jpg",
     limit: 151,
   },
@@ -28,7 +30,8 @@ const gameVersion = {
     regionalDex: ["https://pokeapi.co/api/v2/pokedex/3/"],
     sprite:
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/silver/transparent",
-    imageType: "png",
+    animatedSprite: null,
+    animatedFileType: null,
     banner: "banners/gs.jpg",
     limit: 251,
   },
@@ -38,8 +41,10 @@ const gameVersion = {
       "The first Pokémon game with animated Pokémon sprites and the first to let players choose a female character.",
     regionalDex: ["https://pokeapi.co/api/v2/pokedex/3/"],
     sprite:
+      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent",
+    animatedSprite:
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated",
-    imageType: "gif",
+    animatedFileType: "gif",
     banner: "banners/crystal.jpg",
     limit: 251,
   },
@@ -50,7 +55,8 @@ const gameVersion = {
     regionalDex: ["https://pokeapi.co/api/v2/pokedex/4/"],
     sprite:
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/ruby-sapphire",
-    imageType: "png",
+    animatedSprite: null,
+    animatedFileType: null,
     banner: "banners/rs.jpg",
     limit: 386,
   },
@@ -61,7 +67,8 @@ const gameVersion = {
     regionalDex: ["https://pokeapi.co/api/v2/pokedex/2/"],
     sprite:
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen",
-    imageType: "png",
+    animatedSprite: null,
+    animatedFileType: null,
     banner: "banners/frlg.png",
     limit: 386,
   },
@@ -71,8 +78,10 @@ const gameVersion = {
       "Expanded Hoenn with the Battle Frontier and centered its legendary storyline around Rayquaza.",
     regionalDex: ["https://pokeapi.co/api/v2/pokedex/4/"],
     sprite:
+      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/emerald",
+    animatedSprite:
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/emerald/animated",
-    imageType: "png",
+    animatedFileType: "png",
     banner: "banners/emerald.jpg",
     limit: 386,
   },
@@ -82,8 +91,10 @@ const gameVersion = {
       "The first main-series Pokémon games on Nintendo DS, introducing online trading and battling through Nintendo Wi-Fi.",
     regionalDex: ["https://pokeapi.co/api/v2/pokedex/5/"],
     sprite:
+      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iv/diamond-pearl",
+    animatedSprite:
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iv/diamond-pearl/animated",
-    imageType: "png",
+    animatedFileType: "png",
     banner: "banners/dp.jpg",
     limit: 493,
   },
@@ -93,8 +104,10 @@ const gameVersion = {
       "Expanded Sinnoh with the Distortion World, new forms, and an enhanced storyline centered around Giratina.",
     regionalDex: ["https://pokeapi.co/api/v2/pokedex/6/"],
     sprite:
+      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iv/platinum",
+    animatedSprite:
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iv/platinum/animated",
-    imageType: "png",
+    animatedFileType: "png",
     banner: "banners/platinum.png",
     limit: 493,
   },
@@ -104,8 +117,10 @@ const gameVersion = {
       "DS remakes of Gold and Silver featuring Pokémon following you and returning adventures across Johto and Kanto.",
     regionalDex: ["https://pokeapi.co/api/v2/pokedex/7/"],
     sprite:
+      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iv/heartgold-soulsilver",
+    animatedSprite:
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iv/heartgold-soulsilver/animated",
-    imageType: "png",
+    animatedFileType: "png",
     banner: "banners/hgss.png",
     limit: 493,
   },
@@ -115,8 +130,10 @@ const gameVersion = {
       "Introduced 156 new Pokémon and initially restricted the Pokédex to entirely new species.",
     regionalDex: ["https://pokeapi.co/api/v2/pokedex/8/"],
     sprite:
-      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/",
-    imageType: "gif",
+      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white",
+    animatedSprite:
+      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated",
+    animatedFileType: "gif",
     banner: "banners/bw.png",
     limit: 649,
   },
@@ -126,8 +143,10 @@ const gameVersion = {
       "The first direct Pokémon sequels, continuing Black and White's story two years later.",
     regionalDex: ["https://pokeapi.co/api/v2/pokedex/9/"],
     sprite:
+      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white",
+    animatedSprite:
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated",
-    imageType: "gif",
+    animatedFileType: "gif",
     banner: "banners/bw2.jpg",
     limit: 649,
   },
@@ -140,9 +159,10 @@ const gameVersion = {
       "https://pokeapi.co/api/v2/pokedex/13/",
       "https://pokeapi.co/api/v2/pokedex/14/",
     ],
-    sprite:
+    sprite: null,
+    animatedSprite:
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-vii/ultra-sun-ultra-moon",
-    imageType: "gif",
+    animatedFileType: "gif",
     banner: "banners/xy.jpg",
     limit: 721,
   },
@@ -151,9 +171,10 @@ const gameVersion = {
     summary:
       "Hoenn remakes featuring Mega Evolution, Primal Reversion, and expanded post-game content.",
     regionalDex: ["https://pokeapi.co/api/v2/pokedex/15/"],
-    sprite:
+    sprite: null,
+    animatedSprite:
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-vii/ultra-sun-ultra-moon",
-    imageType: "gif",
+    animatedFileType: "gif",
     banner: "banners/oras.png",
     limit: 721,
   },
@@ -167,9 +188,10 @@ const gameVersion = {
       "https://pokeapi.co/api/v2/pokedex/19/",
       "https://pokeapi.co/api/v2/pokedex/20/",
     ],
-    sprite:
+    sprite: null,
+    animatedSprite:
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-vii/ultra-sun-ultra-moon",
-    imageType: "gif",
+    animatedFileType: "gif",
     banner: "banners/sm.jpg",
     limit: 802,
   },
@@ -183,9 +205,10 @@ const gameVersion = {
       "https://pokeapi.co/api/v2/pokedex/24/",
       "https://pokeapi.co/api/v2/pokedex/25/",
     ],
-    sprite:
+    sprite: null,
+    animatedSprite:
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-vii/ultra-sun-ultra-moon",
-    imageType: "gif",
+    animatedFileType: "gif",
     banner: "banners/usum.jpg",
     limit: 807,
   },
@@ -194,9 +217,10 @@ const gameVersion = {
     summary:
       "First main-series games built around Pokémon GO-inspired catching, returning to Kanto with partner Pikachu or Eevee.",
     regionalDex: ["https://pokeapi.co/api/v2/pokedex/2/"],
-    sprite:
+    sprite: null,
+    animatedSprite:
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-vii/lets-go-pikachu-lets-go-eevee",
-    imageType: "gif",
+    animatedFileType: "gif",
     banner: "banners/lgpe.jpg",
     limit: 151,
   },
@@ -209,9 +233,10 @@ const gameVersion = {
       "https://pokeapi.co/api/v2/pokedex/28/",
       "https://pokeapi.co/api/v2/pokedex/29/",
     ],
-    sprite:
+    sprite: null,
+    animatedSprite:
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-viii/sword-shield",
-    imageType: "webp",
+    animatedFileType: "webp",
     banner: "banners/swsh.png",
     limit: 898,
   },
@@ -220,9 +245,10 @@ const gameVersion = {
     summary:
       "Faithful Sinnoh remakes featuring updated visuals, underground exploration, and modern Pokémon mechanics.",
     regionalDex: ["https://pokeapi.co/api/v2/pokedex/5/"],
-    sprite:
+    sprite: null,
+    animatedSprite:
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-viii/brilliant-diamond-shining-pearl",
-    imageType: "webp",
+    animatedFileType: "webp",
     banner: "banners/bdsp.jpg",
     limit: 493,
   },
@@ -235,9 +261,10 @@ const gameVersion = {
       "https://pokeapi.co/api/v2/pokedex/32/",
       "https://pokeapi.co/api/v2/pokedex/33/",
     ],
-    sprite:
+    sprite: null,
+    animatedSprite:
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ix/scarlet-violet",
-    imageType: "webp",
+    animatedFileType: "webp",
     banner: "banners/sv.jpg",
     limit: 1025,
   },
