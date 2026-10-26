@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import ReactQueryProvider from "@/providers/reactQueryProvider";
+import Header from "@/components/header";
+import Footer from "@/components/footer";
 import { MantineProvider } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
 import "@mantine/core/styles.css";
@@ -32,11 +34,13 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
+      <body className="flex flex-col gap-4 min-h-full">
         <ReactQueryProvider>
           <MantineProvider>
+            <Header />
             <Notifications />
             {children}
+            <Footer />
           </MantineProvider>
         </ReactQueryProvider>
       </body>
