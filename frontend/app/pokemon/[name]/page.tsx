@@ -32,23 +32,15 @@ const Page = () => {
     error,
     isError,
   } = useGetPokemon(slug);
+  const loading = isLoading || !pokemonData || !pokemonSpecies;
   const router = useRouter();
   const isMobile = useMediaQuery("(max-width: 768px)");
 
   if (isError && error) return <ErrorPage title={error.message} />;
 
-  // Page Skeleton
-  if (isLoading || !pokemonData || !pokemonSpecies)
-    return (
-      <Flex
-        direction="column"
-        align="center"
-        gap="2rem"
-        w={isMobile ? "90%" : "100%"}
-        py="1.5rem"
-        className={`${isMobile ? "mx-auto" : "px-7"}`}
-      >
-        {/* Display Pokemon */}
+  const DisplayPokemon = () => {
+    if (loading)
+      return (
         <Flex direction="column" align="center" gap="1rem">
           <Skeleton
             className="skeleton-bg"
@@ -79,100 +71,8 @@ const Page = () => {
             ))}
           </Flex>
         </Flex>
-        <Flex
-          direction={isMobile ? "column" : "row"}
-          justify="center"
-          align="center"
-          gap="1rem"
-          w="100%"
-        >
-          {/* Display Ability */}
-          <Flex
-            direction={isMobile ? "row" : "column"}
-            className={isMobile ? "w-full" : "gap-5"}
-          >
-            {Array.from({ length: 2 }, (_, idx) => (
-              <Flex
-                key={idx}
-                direction="column"
-                align="center"
-                flex={1}
-                gap="0.5rem"
-              >
-                {Array.from({ length: 2 }, (_, idx) => (
-                  <Skeleton
-                    key={idx}
-                    className="skeleton-bg"
-                    h={isMobile ? "1rem" : "1.5rem"}
-                    w="9rem"
-                    visible={true}
-                  />
-                ))}
-              </Flex>
-            ))}
-          </Flex>
-          {/* Evolution Chain */}
-          <Flex direction="row" align="center" gap="0.5rem">
-            {Array.from({ length: 5 }, (_, idx) =>
-              idx % 2 == 0 ? (
-                <Skeleton
-                  key={idx}
-                  className="skeleton-bg"
-                  h={isMobile ? "6rem" : "10rem"}
-                  w={isMobile ? "6rem" : "10rem"}
-                  visible={true}
-                />
-              ) : (
-                <Skeleton
-                  key={idx}
-                  className="skeleton-bg"
-                  h=".5rem"
-                  w=".5rem"
-                  radius="0"
-                  visible={true}
-                />
-              ),
-            )}
-          </Flex>
-        </Flex>
-        {/* Special Info */}
-        <div className="grid grid-cols-3 gap-4 w-full">
-          {Array.from({ length: 9 }, (_, idx) => (
-            <Skeleton
-              key={idx}
-              className="skeleton-bg"
-              h="7rem"
-              radius={0}
-              visible={true}
-            />
-          ))}
-        </div>
-        {/* Stats */}
-        <Skeleton className="skeleton-bg" w="100%" h="15rem" />
-        {/* Moves */}
-        <Flex direction="column" align="center" gap="1rem">
-          <Skeleton
-            className="skeleton-bg"
-            w="10rem"
-            h={isMobile ? "1rem" : "1.5rem"}
-          />
-          <Flex direction="row" justify="center" wrap="wrap" gap="1rem">
-            {Array.from({ length: 12 }, (_, idx) => (
-              <Skeleton
-                key={idx}
-                className="skeleton-bg"
-                w="25rem"
-                h="7rem"
-                radius={0}
-                visible={true}
-              />
-            ))}
-          </Flex>
-        </Flex>
-      </Flex>
-    );
+      );
 
-  const DisplayPokemon = () => {
     return (
       <Flex direction="column" align="center" gap="1rem">
         <Flex direction="row" align="center" gap="0.5rem">
@@ -222,6 +122,34 @@ const Page = () => {
   };
 
   const DisplayAbility = () => {
+    if (loading)
+      return (
+        <Flex
+          direction={isMobile ? "row" : "column"}
+          className={isMobile ? "w-full" : "gap-5"}
+        >
+          {Array.from({ length: 2 }, (_, idx) => (
+            <Flex
+              key={idx}
+              direction="column"
+              align="center"
+              flex={1}
+              gap="0.5rem"
+            >
+              {Array.from({ length: 2 }, (_, idx) => (
+                <Skeleton
+                  key={idx}
+                  className="skeleton-bg"
+                  h={isMobile ? "1rem" : "1.5rem"}
+                  w="9rem"
+                  visible={true}
+                />
+              ))}
+            </Flex>
+          ))}
+        </Flex>
+      );
+
     const regularAbilities = pokemonData.abilities.filter(
       (ability) => ability.is_hidden == false,
     );
@@ -268,6 +196,32 @@ const Page = () => {
   };
 
   const EvolutionChain = ({ chain }: { chain: Chain }) => {
+    if (loading)
+      return (
+        <Flex direction="row" align="center" gap="0.5rem">
+          {Array.from({ length: 5 }, (_, idx) =>
+            idx % 2 == 0 ? (
+              <Skeleton
+                key={idx}
+                className="skeleton-bg"
+                h={isMobile ? "6rem" : "10rem"}
+                w={isMobile ? "6rem" : "10rem"}
+                visible={true}
+              />
+            ) : (
+              <Skeleton
+                key={idx}
+                className="skeleton-bg"
+                h=".5rem"
+                w=".5rem"
+                radius="0"
+                visible={true}
+              />
+            ),
+          )}
+        </Flex>
+      );
+
     // For pokemons that don't evolve
     if (chain.evolves_to.length == 0 && chain.evolution_details.length == 0)
       return;
@@ -360,6 +314,21 @@ const Page = () => {
   };
 
   const SpecialInfo = () => {
+    if (loading)
+      return (
+        <div className="grid grid-cols-3 gap-4 w-full">
+          {Array.from({ length: 9 }, (_, idx) => (
+            <Skeleton
+              key={idx}
+              className="skeleton-bg"
+              h="7rem"
+              radius={0}
+              visible={true}
+            />
+          ))}
+        </div>
+      );
+
     const expGrowthMax = {
       "slow-then-very-fast": 600000,
       fast: 800000,
@@ -473,6 +442,8 @@ const Page = () => {
   };
 
   const Stats = () => {
+    if (loading) return <Skeleton className="skeleton-bg" w="100%" h="15rem" />;
+
     const total = pokemonData.stats.reduce(
       (total, current) => total + current.base_stat,
       0,
@@ -556,6 +527,29 @@ const Page = () => {
   };
 
   const Moves = () => {
+    if (loading)
+      return (
+        <Flex direction="column" align="center" gap="1rem">
+          <Skeleton
+            className="skeleton-bg"
+            w="10rem"
+            h={isMobile ? "1rem" : "1.5rem"}
+          />
+          <Flex direction="row" justify="center" wrap="wrap" gap="1rem">
+            {Array.from({ length: 12 }, (_, idx) => (
+              <Skeleton
+                key={idx}
+                className="skeleton-bg"
+                w="25rem"
+                h="7rem"
+                radius={0}
+                visible={true}
+              />
+            ))}
+          </Flex>
+        </Flex>
+      );
+
     const tm = pokemonData.moves.filter((moveData) =>
       moveData.version_group_details.some(
         (detail) => detail.move_learn_method.name === "machine",
