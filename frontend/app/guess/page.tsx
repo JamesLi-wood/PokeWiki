@@ -38,59 +38,61 @@ const Page = () => {
     const isMobile = useMediaQuery("(max-width: 768px)");
 
     return (
-      <Flex
-        direction="column"
-        align="center"
-        bg="var(--secondary)"
-        gap="1rem"
-        m="auto"
-        p="1rem"
-        w="auto"
-        maw="80%"
-      >
-        <Text fw="bold">Select Regions</Text>
-        <div className="grid grid-cols-3 gap-4">
-          {gameRegions.map((region) => (
-            <Checkbox.Card
-              w="10rem"
-              maw="100%"
-              key={region}
-              onChange={(event) => {
-                regionsClone[region].selected = event;
-              }}
-            >
-              <Flex direction="row" align="center" gap="0.5rem" p="0.5rem">
-                <Checkbox.Indicator radius="xl" />
-                <Text size={isMobile ? "xs" : "md"} className="capitalize">
-                  {region}
-                </Text>
-              </Flex>
-            </Checkbox.Card>
-          ))}
-        </div>
-        <Button
-          onClick={() => {
-            const selectedRegions = Object.entries(regionsClone)
-              .filter(([_, data]) => data.selected)
-              .map(([region, data]) => ({
-                name: region,
-                ...data,
-              }));
-
-            if (selectedRegions.length == 0) {
-              notifications.show({
-                title: "Error",
-                message: "Please select at least one region.",
-                color: "red",
-              });
-            } else {
-              setGuessingRegions(selectedRegions);
-              setGamestate("guess");
-            }
-          }}
+      <Flex direction="row" h="100%">
+        <Flex
+          direction="column"
+          align="center"
+          bg="var(--secondary)"
+          gap="1rem"
+          m="auto"
+          p="1rem"
+          w="auto"
+          maw="80%"
         >
-          Submit
-        </Button>
+          <Text fw="bold">Select Regions</Text>
+          <div className="grid grid-cols-3 gap-4">
+            {gameRegions.map((region) => (
+              <Checkbox.Card
+                w="10rem"
+                maw="100%"
+                key={region}
+                onChange={(event) => {
+                  regionsClone[region].selected = event;
+                }}
+              >
+                <Flex direction="row" align="center" gap="0.5rem" p="0.5rem">
+                  <Checkbox.Indicator radius="xl" />
+                  <Text size={isMobile ? "xs" : "md"} className="capitalize">
+                    {region}
+                  </Text>
+                </Flex>
+              </Checkbox.Card>
+            ))}
+          </div>
+          <Button
+            onClick={() => {
+              const selectedRegions = Object.entries(regionsClone)
+                .filter(([_, data]) => data.selected)
+                .map(([region, data]) => ({
+                  name: region,
+                  ...data,
+                }));
+
+              if (selectedRegions.length == 0) {
+                notifications.show({
+                  title: "Error",
+                  message: "Please select at least one region.",
+                  color: "red",
+                });
+              } else {
+                setGuessingRegions(selectedRegions);
+                setGamestate("guess");
+              }
+            }}
+          >
+            Submit
+          </Button>
+        </Flex>
       </Flex>
     );
   };
