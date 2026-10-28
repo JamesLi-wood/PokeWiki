@@ -34,12 +34,12 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="flex flex-col gap-4 min-h-full">
+      <body className="flex flex-col gap-4">
         <ReactQueryProvider>
           <MantineProvider>
             <Header />
             <Notifications />
-            {children}
+            <main className="flex-1">{children}</main>
             <Footer />
           </MantineProvider>
         </ReactQueryProvider>
