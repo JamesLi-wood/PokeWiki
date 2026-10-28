@@ -158,6 +158,21 @@ const Pokedex = ({
               switch (version) {
                 case "rb":
                 case "yellow":
+                  return pokemon.pastTypes.length > 0
+                    ? pokemon.pastTypes.map((data) => (
+                        <LoadPkmnType
+                          key={data.slot}
+                          type={data.type.name}
+                          isMobile={isMobile}
+                        />
+                      ))
+                    : pokemon.currentTypes.map((data) => (
+                        <LoadPkmnType
+                          key={data.slot}
+                          type={data.type.name}
+                          isMobile={isMobile}
+                        />
+                      ));
                 case "gs":
                 case "crystal":
                 case "rs":
@@ -168,6 +183,14 @@ const Pokedex = ({
                 case "hgss":
                 case "bw":
                 case "bw2":
+                  if (pokemon.name == "magnemite" || "magneton")
+                    return pokemon.currentTypes.map((data) => (
+                      <LoadPkmnType
+                        key={data.slot}
+                        type={data.type.name}
+                        isMobile={isMobile}
+                      />
+                    ));
                   return pokemon.pastTypes.length > 0
                     ? pokemon.pastTypes.map((data) => (
                         <LoadPkmnType
