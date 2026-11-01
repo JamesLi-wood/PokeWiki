@@ -132,6 +132,7 @@ const Pokedex = ({
       >
         <Image
           src={imgSrc}
+          fallbackSrc="/unavailable.png"
           alt={pokemon.name}
           h={isMobile ? "4rem" : "6rem"}
           fit="contain"
