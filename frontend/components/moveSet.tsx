@@ -30,11 +30,7 @@ const MoveSet = ({ moveSet, condition }: Props) => {
       w="25rem"
     >
       <Flex direction="row" gap="1rem" align="center">
-        <Text
-          className="capitalize w-[70%]"
-          fw="bold"
-          size={isMobile ? "sm" : "md"}
-        >
+        <Text size={isMobile ? "sm" : "md"} tt="capitalize" fw="bold" w="70%">
           {move.name}
         </Text>
         <Flex direction="column" gap="0.5rem">
