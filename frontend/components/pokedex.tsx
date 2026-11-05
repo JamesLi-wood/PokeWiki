@@ -146,11 +146,7 @@ const Pokedex = ({
             >
               {`#${badgeNumber}`}
             </Badge>
-            <Text
-              className="capitalize"
-              c="white"
-              size={isMobile ? "xs" : "md"}
-            >
+            <Text size={isMobile ? "xs" : "md"} tt="capitalize" c="white">
               {pokemon.name}
             </Text>
           </Flex>
