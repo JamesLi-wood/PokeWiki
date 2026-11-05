@@ -114,10 +114,7 @@ const Page = () => {
           <>
             {regDex?.map((dex) => (
               <div key={dex.title}>
-                <Text
-                  className="capitalize"
-                  fw="bold"
-                >{`${dex.title} Pokedex`}</Text>
+                <Text tt="capitalize" fw="bold">{`${dex.title} Pokedex`}</Text>
                 <Pokedex
                   version={version}
                   dexKey={dex.title}
@@ -130,9 +127,7 @@ const Page = () => {
           </>
         ) : (
           <>
-            <Text className="capitalize" fw="bold">
-              {natDex.title}
-            </Text>
+            <Text fw="bold">{natDex.title}</Text>
             <Pokedex
               version={version}
               dexKey={natDex.title}
