@@ -16,6 +16,7 @@ import MoveSet from "@/components/moveSet";
 import LoadPkmnType from "@/components/loadPkmnType";
 import ErrorPage from "@/components/errorPage";
 import minMaxStat from "@/utils/minMaxStat";
+import typeChart from "@/utils/typeChart";
 import { Chain } from "@/types/evolutionChain";
 
 const Page = () => {
@@ -76,22 +77,24 @@ const Page = () => {
     return (
       <Flex direction="column" align="center" gap="1rem">
         <Flex direction="row" align="center" gap="0.5rem">
-          <Text size={isMobile ? "sm" : "xl"}>{`#${pokemonData.id}`}</Text>
-          <Text className="capitalize" size={isMobile ? "sm" : "xl"}>
+          <Text
+            size={isMobile ? "md" : "xl"}
+            fw="bold"
+          >{`#${pokemonData.id}`}</Text>
+          <Text size={isMobile ? "md" : "xl"} tt="capitalize" fw="bold">
             {pokemonData.species.name}
           </Text>
           {pokemonSpecies.is_legendary && (
-            <Badge color="orange" size={isMobile ? "sm" : "lg"}>
+            <Badge color="orange" size={isMobile ? "md" : "lg"}>
               Legendary
             </Badge>
           )}
           {pokemonSpecies.is_mythical && (
-            <Badge color="red" size={isMobile ? "sm" : "lg"}>
+            <Badge color="red" size={isMobile ? "md" : "lg"}>
               Mythical
             </Badge>
           )}
         </Flex>
-
         <Flex direction="row" gap="0.5rem">
           {pokemonData.types.map((data) => (
             <LoadPkmnType
@@ -405,7 +408,7 @@ const Page = () => {
         </InfoTable>
         <InfoTable title="Gender Rate">
           {pokemonSpecies.gender_rate == -1 ? (
-            <>Genderless</>
+            <Text size={isMobile ? "xs" : "md"}>Genderless</Text>
           ) : (
             <>
               <Text
@@ -476,7 +479,7 @@ const Page = () => {
                 justify="space-between"
                 w={isMobile ? "8rem" : "12rem"}
               >
-                <Text className="capitalize" size={isMobile ? "xs" : "lg"}>
+                <Text size={isMobile ? "xs" : "lg"} tt="capitalize">
                   {stat.stat.name}
                 </Text>
                 <Text size={isMobile ? "xs" : "lg"}>{stat.base_stat}</Text>
@@ -523,6 +526,68 @@ const Page = () => {
           </Flex>
         </div>
       </Card>
+    );
+  };
+
+  const TypeChart = () => {
+    const types = Object.keys(typeChart);
+
+    if (loading)
+      return (
+        <Flex direction="row" justify="center" wrap="wrap" gap="1rem">
+          {types.map((type) => (
+            <Skeleton
+              key={type}
+              className="skeleton-bg"
+              w={isMobile ? "4rem" : "5rem"}
+              h="4rem"
+            />
+          ))}
+        </Flex>
+      );
+
+    const typeMultiplier = (type: string) => {
+      let dmgMultiplier = 1;
+      pokemonData.types.map((data) => {
+        const pokemonType = data.type.name as keyof typeof typeChart;
+        const multiplier = typeChart[pokemonType][type] ?? 1;
+        dmgMultiplier *= multiplier;
+      });
+      return dmgMultiplier;
+    };
+
+    return (
+      <Flex direction="row" justify="center" wrap="wrap" gap="1rem">
+        {types.map((type) => {
+          const multiplier = typeMultiplier(type);
+          return (
+            <Flex
+              key={type}
+              direction="column"
+              ta="center"
+              w={isMobile ? "4rem" : "5rem"}
+            >
+              <Text
+                size={isMobile ? "xs" : "md"}
+                tt="capitalize"
+                fw="bold"
+                bg={`var(--${type})`}
+                p="0.25rem"
+              >
+                {type}
+              </Text>
+              <Text
+                className="multiplier"
+                data-multiplier={multiplier}
+                size={isMobile ? "xs" : "md"}
+                p="0.25rem"
+              >
+                {multiplier}
+              </Text>
+            </Flex>
+          );
+        })}
+      </Flex>
     );
   };
 
@@ -626,6 +691,7 @@ const Page = () => {
       </Flex>
       <SpecialInfo />
       <Stats />
+      <TypeChart />
       <Moves />
     </Flex>
   );
